@@ -4,10 +4,29 @@ Find Nigerian restaurants and African shops across the United Kingdom
 
 ## 🎯 Project Status
 
-**Current Phase:** Planning & Setup  
-**Progress:** 5%  
+**Current Phase:** Planning & Setup ✅  
+**Progress:** 25%
 **Start Date:** December 23, 2025  
 **Target Launch:** February 2026
+
+## ✅ Completed Milestones
+
+- [x] Repository setup and documentation structure
+- [x] Architecture design (Feature-first + MVVM + Riverpod)
+- [x] Data models defined (Restaurant, Review, User)
+- [x] UI/UX design system created
+- [x] 5 main screens designed
+
+## 🔨 Currently Working On
+
+- [ ] Firebase project setup
+- [ ] Flutter project initialization
+
+## 📋 Coming Next
+
+- [ ] CI/CD pipeline
+- [ ] First feature implementation
+- [ ] Database integration
 
 ## 📋 Roadmap
 
@@ -49,3 +68,4 @@ Built by Hameed Habeeblahi Gbolahan
 ## 📄 License
 
 MIT License - feel free to use and contribute!
+
