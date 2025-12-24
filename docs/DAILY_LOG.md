@@ -37,4 +37,27 @@
 
 **Mood:** Productive and clear on direction! 🎯
 
+
+**Update (Evening):**
+- ✅ Started UI/UX design planning
+- ✅ Defined color palette (Nigerian flag colors!)
+- ✅ Sketched 5 main screens
+- ✅ Documented design system
+- ✅ Created UI_DESIGN.md
+
+**Design Decisions:**
+- Using Nigerian green (#008751) as primary color
+- Simple, clean interface (not over-designed)
+- Bottom navigation for main sections
+- Card-based layout for restaurants
+
+**Next:**
+- Create actual wireframes/mockups
+- Then move to Firebase setup
+
+**Time spent today:** 2.5 hours total  
+**Feeling:** Making solid progress! 🎨
+
+---
+
 ---
