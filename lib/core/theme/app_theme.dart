@@ -22,9 +22,9 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      
+
       // Color Scheme
-      colorScheme: ColorScheme.light(
+      colorScheme: const ColorScheme.light(
         primary: nigerianGreen,
         secondary: accentGold,
         surface: nigerianWhite,
@@ -48,12 +48,12 @@ class AppTheme {
       ),
 
       // Card Theme
-      cardTheme: CardTheme(
+      cardTheme: const CardThemeData(
         elevation: 2,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.all(Radius.circular(12)),
         ),
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       ),
 
       // Elevated Button Theme
@@ -88,7 +88,8 @@ class AppTheme {
           borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: nigerianGreen, width: 2),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
 
       // Text Theme
@@ -109,7 +110,7 @@ class AppTheme {
           fontWeight: FontWeight.bold,
           color: darkGrey,
         ),
-        
+
         // Titles
         titleLarge: TextStyle(
           fontSize: 20,
@@ -126,7 +127,7 @@ class AppTheme {
           fontWeight: FontWeight.w600,
           color: darkGrey,
         ),
-        
+
         // Body
         bodyLarge: TextStyle(
           fontSize: 16,
@@ -143,7 +144,7 @@ class AppTheme {
           fontWeight: FontWeight.normal,
           color: darkGrey,
         ),
-        
+
         // Labels
         labelLarge: TextStyle(
           fontSize: 14,

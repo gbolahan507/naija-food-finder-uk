@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'core/theme/app_theme.dart'; 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'core/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,6 +10,7 @@ void main() async {
   );
   runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -19,7 +20,14 @@ class MyApp extends StatelessWidget {
       title: 'Naija Food Finder UK',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const MyHomePage(title: 'Naija Food Finder UK 🇳🇬🇬🇧'),
+      home: const Scaffold(
+        body: Center(
+          child: Text(
+            'Naija Food Finder UK 🇳🇬🇬🇧',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
     );
   }
 }

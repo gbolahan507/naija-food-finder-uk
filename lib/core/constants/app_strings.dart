@@ -6,7 +6,8 @@ class AppStrings {
   // App Info
   static const String appName = 'Naija Food Finder UK';
   static const String appNameShort = 'Naija Food Finder';
-  static const String appTagline = 'Find Nigerian restaurants and African shops across the UK';
+  static const String appTagline =
+      'Find Nigerian restaurants and African shops across the UK';
 
   // Bottom Navigation
   static const String navHome = 'Home';
@@ -91,8 +92,10 @@ class AppStrings {
 
   // Error Messages
   static const String errorGeneric = 'Something went wrong. Please try again.';
-  static const String errorNetwork = 'No internet connection. Please check your network.';
-  static const String errorLocation = 'Unable to get your location. Please enable location services.';
+  static const String errorNetwork =
+      'No internet connection. Please check your network.';
+  static const String errorLocation =
+      'Unable to get your location. Please enable location services.';
   static const String errorAuth = 'Authentication failed. Please try again.';
 
   // Success Messages
