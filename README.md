@@ -1,5 +1,12 @@
 # Naija Food Finder UK 🇳🇬🇬🇧
 
+
+
+![CI](https://github.com/gbolahan507/naija-food-finder-uk/workflows/CI/badge.svg)
+[![Flutter](https://img.shields.io/badge/Flutter-3.38.5-blue.svg)](https://flutter.dev/)
+[![Firebase](https://img.shields.io/badge/Firebase-Enabled-orange.svg)](https://firebase.google.com/)
+
+
 Find Nigerian restaurants and African shops across the United Kingdom
 
 ## 🎯 Project Status
