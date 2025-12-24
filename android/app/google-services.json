@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "620071589254",
+    "project_id": "naija-food-finder-uk",
+    "storage_bucket": "naija-food-finder-uk.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620071589254:android:e672152b39d7c6704c8807",
+        "android_client_info": {
+          "package_name": "com.naijafoodfinder.naija_food_finder_uk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWEHBu_RoEf3nZQX_peVgeVzd4UCrFIaM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
