@@ -3,8 +3,15 @@ import '../../data/mock_data.dart';
 import '../widgets/restaurant_card.dart';
 import '../../../../core/constants/app_colors.dart';
 
-class RestaurantsListScreen extends StatelessWidget {
+class RestaurantsListScreen extends StatefulWidget {
   const RestaurantsListScreen({super.key});
+
+  @override
+  State<RestaurantsListScreen> createState() => _RestaurantsListScreenState();
+}
+
+class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
+  String _selectedFilter = 'All';
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +55,13 @@ class RestaurantsListScreen extends StatelessWidget {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                _buildFilterChip('All', true),
+                _buildFilterChip('All'),
                 const SizedBox(width: 8),
-                _buildFilterChip('Nigerian', false),
+                _buildFilterChip('Nigerian'),
                 const SizedBox(width: 8),
-                _buildFilterChip('Delivery', false),
+                _buildFilterChip('Delivery'),
                 const SizedBox(width: 8),
-                _buildFilterChip('Open Now', false),
+                _buildFilterChip('Open Now'),
               ],
             ),
           ),
@@ -86,22 +93,30 @@ class RestaurantsListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFilterChip(String label, bool isSelected) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: isSelected ? AppColors.primaryGreen : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isSelected ? AppColors.primaryGreen : AppColors.mediumGrey,
+  Widget _buildFilterChip(String label) {
+    final isSelected = _selectedFilter == label;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedFilter = label;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primaryGreen : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected ? AppColors.primaryGreen : AppColors.mediumGrey,
+          ),
         ),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: isSelected ? Colors.white : AppColors.darkText,
-          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-          fontSize: 14,
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : AppColors.darkText,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            fontSize: 14,
+          ),
         ),
       ),
     );

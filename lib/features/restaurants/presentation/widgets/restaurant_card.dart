@@ -15,7 +15,8 @@ class RestaurantCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: Clip.hardEdge,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: InkWell(
         onTap: onTap,
         child: Column(
@@ -24,22 +25,24 @@ class RestaurantCard extends StatelessWidget {
             // Restaurant Image
             Stack(
               children: [
-                Image.network(
-                  restaurant.imageUrl,
+                SizedBox(
                   height: 150,
                   width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      height: 150,
-                      color: AppColors.lightGrey,
-                      child: const Icon(
-                        Icons.restaurant,
-                        size: 50,
-                        color: AppColors.mediumGrey,
-                      ),
-                    );
-                  },
+                  child: Image.network(
+                    restaurant.imageUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        height: 150,
+                        color: AppColors.lightGrey,
+                        child: const Icon(
+                          Icons.restaurant,
+                          size: 50,
+                          color: AppColors.mediumGrey,
+                        ),
+                      );
+                    },
+                  ),
                 ),
                 // Open/Closed Badge
                 Positioned(
