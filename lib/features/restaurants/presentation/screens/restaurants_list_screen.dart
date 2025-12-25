@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../data/mock_data.dart';
 import '../widgets/restaurant_card.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -76,12 +77,10 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                 return RestaurantCard(
                   restaurant: restaurant,
                   onTap: () {
-                    // TODO: Navigate to restaurant details
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Tapped on ${restaurant.name}'),
-                        duration: const Duration(seconds: 1),
-                      ),
+                    context.pushNamed(
+                      'restaurant-details',
+                      pathParameters: {'id': restaurant.id},
+                      extra: restaurant,
                     );
                   },
                 );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:naija_food_finder_uk/core/router/app_router.dart';
 import 'firebase_options.dart';
 import 'core/theme/app_theme.dart';
-import 'features/restaurants/presentation/screens/restaurants_list_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,10 +17,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Naija Food Finder UK',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        home: const RestaurantsListScreen());
+    return MaterialApp.router(
+      title: 'Naija Food Finder UK',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme,
+      routerConfig: AppRouter.router,
+    );
   }
 }
