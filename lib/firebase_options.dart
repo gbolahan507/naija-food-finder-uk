@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -64,5 +61,14 @@ class DefaultFirebaseOptions {
     projectId: 'naija-food-finder-uk',
     storageBucket: 'naija-food-finder-uk.firebasestorage.app',
     iosBundleId: 'com.naijafoodfinder.naijaFoodFinderUk',
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCWEHBu_RoEf3nZQX_peVgeVzd4UCrFIaM',
+    appId: '1:620071589254:web:XXXXXXXXXXXXXXXXXX',
+    messagingSenderId: '620071589254',
+    projectId: 'naija-food-finder-uk',
+    storageBucket: 'naija-food-finder-uk.firebasestorage.app',
+    authDomain: 'naija-food-finder-uk.firebaseapp.com',
   );
 }
