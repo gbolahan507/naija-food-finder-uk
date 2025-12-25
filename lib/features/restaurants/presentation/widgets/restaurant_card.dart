@@ -111,7 +111,7 @@ class RestaurantCard extends StatelessWidget {
                   // Cuisine Types
                   Text(
                     restaurant.cuisineTypes.join(' • '),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       color: AppColors.lightText,
                     ),
@@ -159,7 +159,8 @@ class RestaurantCard extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.deliveryBadge.withOpacity(0.1),
+                            color:
+                                AppColors.deliveryBadge.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4),
                             border: Border.all(
                               color: AppColors.deliveryBadge,
@@ -184,7 +185,8 @@ class RestaurantCard extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.takeawayBadge.withOpacity(0.1),
+                            color:
+                                AppColors.takeawayBadge.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4),
                             border: Border.all(
                               color: AppColors.takeawayBadge,
@@ -203,7 +205,7 @@ class RestaurantCard extends StatelessWidget {
                       const Spacer(),
                       Text(
                         '${restaurant.reviewCount} reviews',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.lightText,
                         ),
