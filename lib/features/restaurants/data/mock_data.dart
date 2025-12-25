@@ -2,7 +2,8 @@ import 'models/restaurant_model.dart';
 
 class MockRestaurants {
   static final List<Restaurant> restaurants = [
-    Restaurant(
+    const Restaurant(
+      // ← Add const here
       id: '1',
       name: 'Mama\'s Kitchen',
       address: '123 High Street',
@@ -16,7 +17,8 @@ class MockRestaurants {
       isOpenNow: true,
       imageUrl: 'https://via.placeholder.com/300x200?text=Mama%27s+Kitchen',
     ),
-    Restaurant(
+    const Restaurant(
+      // ← Add const here
       id: '2',
       name: 'Jollof Palace',
       address: '45 Market Road',
@@ -30,7 +32,8 @@ class MockRestaurants {
       isOpenNow: true,
       imageUrl: 'https://via.placeholder.com/300x200?text=Jollof+Palace',
     ),
-    Restaurant(
+    const Restaurant(
+      // ← Add const here
       id: '3',
       name: 'Suya Spot',
       address: '78 Oxford Street',
@@ -44,7 +47,8 @@ class MockRestaurants {
       isOpenNow: false,
       imageUrl: 'https://via.placeholder.com/300x200?text=Suya+Spot',
     ),
-    Restaurant(
+    const Restaurant(
+      // ← Add const here
       id: '4',
       name: 'Eko Kitchen',
       address: '90 Camden High Street',
@@ -58,7 +62,8 @@ class MockRestaurants {
       isOpenNow: true,
       imageUrl: 'https://via.placeholder.com/300x200?text=Eko+Kitchen',
     ),
-    Restaurant(
+    const Restaurant(
+      // ← Add const here
       id: '5',
       name: 'Naija Flavours',
       address: '34 King Street',
