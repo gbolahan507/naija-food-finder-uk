@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naija_food_finder_uk/features/restaurants/data/providers/restaurants_provider.dart';
@@ -158,7 +157,7 @@ class ProfileTabScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final favoritesAsync = ref.watch(favoritesProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -193,7 +192,7 @@ class ProfileTabScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 32),
-            
+
             // Favorites Button
             SizedBox(
               width: 200,
@@ -217,9 +216,9 @@ class ProfileTabScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             SizedBox(
               width: 200,
               child: OutlinedButton.icon(
