@@ -61,6 +61,15 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
     return sorted;
   }
 
+  Future<void> _onRefresh() async {
+    // Invalidate the providers to force a refresh
+    ref.invalidate(filteredRestaurantsProvider);
+    ref.invalidate(restaurantsProvider);
+
+    // Small delay to show the refresh indicator
+    await Future.delayed(const Duration(milliseconds: 500));
+  }
+
   @override
   Widget build(BuildContext context) {
     final restaurantsAsync = ref.watch(filteredRestaurantsProvider);
@@ -330,13 +339,17 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
       );
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.only(top: 8),
-      itemCount: restaurants.length,
-      itemBuilder: (context, index) {
-        final restaurant = restaurants[index];
-        return RestaurantCard(restaurant: restaurant);
-      },
+    return RefreshIndicator(
+      onRefresh: _onRefresh,
+      color: AppColors.primaryGreen,
+      child: ListView.builder(
+        padding: const EdgeInsets.only(top: 8),
+        itemCount: restaurants.length,
+        itemBuilder: (context, index) {
+          final restaurant = restaurants[index];
+          return RestaurantCard(restaurant: restaurant);
+        },
+      ),
     );
   }
 
