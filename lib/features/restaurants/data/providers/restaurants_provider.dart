@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:naija_food_finder_uk/features/restaurants/data/repositories/favorites_repository.dart';
 import '../models/restaurant_model.dart';
 import '../repositories/restaurants_repository.dart';
 
@@ -21,4 +22,26 @@ final filteredRestaurantsProvider = StreamProvider<List<Restaurant>>((ref) {
   final repository = ref.watch(restaurantsRepositoryProvider);
   final searchQuery = ref.watch(searchQueryProvider);
   return repository.searchRestaurants(searchQuery);
+});
+
+// Favorites repository provider
+final favoritesRepositoryProvider = Provider<FavoritesRepository>((ref) {
+  return FavoritesRepository();
+});
+
+// Favorites stream provider
+final favoritesProvider = StreamProvider<List<String>>((ref) {
+  final repository = ref.watch(favoritesRepositoryProvider);
+  return repository.getFavorites();
+});
+
+// Check if specific restaurant is favorited
+final isFavoriteProvider =
+    StreamProvider.family<bool, String>((ref, restaurantId) {
+  final favorites = ref.watch(favoritesProvider);
+  return favorites.when(
+    data: (favoriteIds) => Stream.value(favoriteIds.contains(restaurantId)),
+    loading: () => Stream.value(false),
+    error: (_, __) => Stream.value(false),
+  );
 });

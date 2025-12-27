@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naija_food_finder_uk/features/restaurants/data/providers/restaurants_provider.dart';
 import '../../data/models/restaurant_model.dart';
 import '../../../../core/constants/app_colors.dart';
 
-class RestaurantCard extends StatelessWidget {
+class RestaurantCard extends ConsumerWidget {
+  // ← Changed from StatelessWidget
   final Restaurant restaurant;
   final VoidCallback? onTap;
 
@@ -13,7 +16,10 @@ class RestaurantCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // ← Added WidgetRef ref
+    final isFavoriteAsync = ref.watch(isFavoriteProvider(restaurant.id));
+
     return Card(
       clipBehavior: Clip.hardEdge,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -67,6 +73,68 @@ class RestaurantCard extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+                  ),
+                ),
+
+                Positioned(
+                  top: 8,
+                  left: 8,
+                  child: isFavoriteAsync.when(
+                    data: (isFavorite) {
+                      return GestureDetector(
+                        onTap: () {
+                          final repository =
+                              ref.read(favoritesRepositoryProvider);
+                          repository.toggleFavorite(restaurant.id, isFavorite);
+
+                          // Show feedback
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                isFavorite
+                                    ? 'Removed from favorites'
+                                    : 'Added to favorites',
+                              ),
+                              duration: const Duration(seconds: 1),
+                              backgroundColor: AppColors.primaryGreen,
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.2),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            color:
+                                isFavorite ? Colors.red : AppColors.mediumGrey,
+                            size: 24,
+                          ),
+                        ),
+                      );
+                    },
+                    loading: () => Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.favorite_border,
+                        color: AppColors.mediumGrey,
+                        size: 24,
+                      ),
+                    ),
+                    error: (_, __) => const SizedBox.shrink(),
                   ),
                 ),
               ],
