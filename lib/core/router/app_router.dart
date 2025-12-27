@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import '../navigation/main_navigation.dart';  // ← Add this
+import '../navigation/main_navigation.dart'; // ← Add this
 import '../../features/restaurants/presentation/screens/restaurant_details_screen.dart';
 import '../../features/restaurants/data/models/restaurant_model.dart';
 
@@ -10,7 +10,7 @@ class AppRouter {
       GoRoute(
         path: '/',
         name: 'home',
-        builder: (context, state) => const MainNavigation(),  // ← Changed this
+        builder: (context, state) => const MainNavigation(), // ← Changed this
       ),
       GoRoute(
         path: '/restaurant/:id',
