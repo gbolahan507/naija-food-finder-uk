@@ -15,6 +15,7 @@ class RestaurantsListScreen extends ConsumerStatefulWidget {
 
 class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
   String selectedFilter = 'All';
+  String selectedSort = 'Distance';
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -39,6 +40,27 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
     return restaurants;
   }
 
+  List<Restaurant> applySort(List<Restaurant> restaurants) {
+    final sorted = List<Restaurant>.from(restaurants);
+
+    switch (selectedSort) {
+      case 'Distance':
+        sorted.sort((a, b) => a.distance.compareTo(b.distance));
+        break;
+      case 'Rating':
+        sorted.sort((a, b) => b.rating.compareTo(a.rating));
+        break;
+      case 'Name':
+        sorted.sort((a, b) => a.name.compareTo(b.name));
+        break;
+      case 'Reviews':
+        sorted.sort((a, b) => b.reviewCount.compareTo(a.reviewCount));
+        break;
+    }
+
+    return sorted;
+  }
+
   @override
   Widget build(BuildContext context) {
     final restaurantsAsync = ref.watch(filteredRestaurantsProvider);
@@ -56,6 +78,78 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
             ),
           ],
         ),
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.sort),
+            onSelected: (value) {
+              setState(() {
+                selectedSort = value;
+              });
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'Distance',
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.near_me,
+                      color: selectedSort == 'Distance'
+                          ? AppColors.primaryGreen
+                          : AppColors.mediumGrey,
+                    ),
+                    const SizedBox(width: 8),
+                    const Text('Sort by Distance'),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'Rating',
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.star,
+                      color: selectedSort == 'Rating'
+                          ? AppColors.primaryGreen
+                          : AppColors.mediumGrey,
+                    ),
+                    const SizedBox(width: 8),
+                    const Text('Sort by Rating'),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'Name',
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.text_fields,
+                      color: selectedSort == 'Name'
+                          ? AppColors.primaryGreen
+                          : AppColors.mediumGrey,
+                    ),
+                    const SizedBox(width: 8),
+                    const Text('Sort by Name'),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'Reviews',
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.reviews,
+                      color: selectedSort == 'Reviews'
+                          ? AppColors.primaryGreen
+                          : AppColors.mediumGrey,
+                    ),
+                    const SizedBox(width: 8),
+                    const Text('Sort by Reviews'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -129,7 +223,8 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
           Expanded(
             child: restaurantsAsync.when(
               data: (allRestaurants) {
-                final restaurants = applyFilters(allRestaurants);
+                var restaurants = applyFilters(allRestaurants);
+                restaurants = applySort(restaurants);
 
                 // Results count
                 if (_searchController.text.isNotEmpty ||
