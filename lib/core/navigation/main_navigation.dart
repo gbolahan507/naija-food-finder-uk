@@ -1,4 +1,8 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naija_food_finder_uk/features/restaurants/data/providers/restaurants_provider.dart';
+import 'package:naija_food_finder_uk/features/restaurants/presentation/screens/favorites_screen.dart';
 import '../../features/restaurants/presentation/screens/restaurants_list_screen.dart';
 import '../constants/app_colors.dart';
 
@@ -148,11 +152,13 @@ class MapTabScreen extends StatelessWidget {
   }
 }
 
-class ProfileTabScreen extends StatelessWidget {
+class ProfileTabScreen extends ConsumerWidget {
   const ProfileTabScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favoritesAsync = ref.watch(favoritesProvider);
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -172,7 +178,7 @@ class ProfileTabScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const Text(
-              'Your Profile',
+              'Guest User',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -180,23 +186,60 @@ class ProfileTabScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Text(
-              'Coming soon!',
+              'Sign in to save your preferences',
               style: TextStyle(
                 fontSize: 16,
                 color: AppColors.lightText,
               ),
             ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Sign in feature coming soon!'),
+            const SizedBox(height: 32),
+            
+            // Favorites Button
+            SizedBox(
+              width: 200,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const FavoritesScreen(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.favorite),
+                label: favoritesAsync.when(
+                  data: (favorites) => Text('Favorites (${favorites.length})'),
+                  loading: () => const Text('Favorites'),
+                  error: (_, __) => const Text('Favorites'),
+                ),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.all(16),
+                ),
+              ),
+            ),
+            
+            const SizedBox(height: 12),
+            
+            SizedBox(
+              width: 200,
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Sign in feature coming soon!'),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.login),
+                label: const Text('Sign In'),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.all(16),
+                  side: const BorderSide(
+                    color: AppColors.primaryGreen,
+                    width: 2,
                   ),
-                );
-              },
-              icon: const Icon(Icons.login),
-              label: const Text('Sign In'),
+                ),
+              ),
             ),
           ],
         ),
