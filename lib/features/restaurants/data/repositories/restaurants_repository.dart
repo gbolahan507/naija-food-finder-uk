@@ -6,10 +6,7 @@ class RestaurantsRepository {
 
   // Get all restaurants
   Stream<List<Restaurant>> getRestaurants() {
-    return _firestore
-        .collection('restaurants')
-        .snapshots()
-        .map((snapshot) {
+    return _firestore.collection('restaurants').snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         return Restaurant.fromFirestore(doc.data(), doc.id);
       }).toList();
@@ -27,10 +24,7 @@ class RestaurantsRepository {
 
   // Search restaurants
   Stream<List<Restaurant>> searchRestaurants(String query) {
-    return _firestore
-        .collection('restaurants')
-        .snapshots()
-        .map((snapshot) {
+    return _firestore.collection('restaurants').snapshots().map((snapshot) {
       final restaurants = snapshot.docs.map((doc) {
         return Restaurant.fromFirestore(doc.data(), doc.id);
       }).toList();
