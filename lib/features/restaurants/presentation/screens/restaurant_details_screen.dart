@@ -348,7 +348,7 @@ class RestaurantDetailsScreen extends StatelessWidget {
     );
   }
 
-  void _shareRestaurant(BuildContext context) {
+  Future<void> _shareRestaurant(BuildContext context) async {
     final shareText = '''
 Check out ${restaurant.name}! 🇳🇬
 
@@ -365,6 +365,17 @@ ${restaurant.isOpenNow ? '🟢 Open now!' : '🔴 Currently closed'}
 Found via Naija Food Finder UK 🇬🇧
   ''';
 
-    SharePlus.instance.share(ShareParams(text: shareText));
+    try {
+      await SharePlus.instance.share(ShareParams(text: shareText));
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unable to share at this time'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
   }
 }
