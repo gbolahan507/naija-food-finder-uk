@@ -366,7 +366,18 @@ Found via Naija Food Finder UK 🇬🇧
   ''';
 
     try {
-      await SharePlus.instance.share(ShareParams(text: shareText));
+      final result = await SharePlus.instance.share(ShareParams(text: shareText));
+
+      // Show success feedback if share was completed
+      if (context.mounted && result.status == ShareResultStatus.success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Shared successfully!'),
+            backgroundColor: AppColors.success,
+            duration: Duration(seconds: 1),
+          ),
+        );
+      }
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
