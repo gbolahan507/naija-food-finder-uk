@@ -130,6 +130,7 @@ class RestaurantDetailsScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Wrap(
                     spacing: 8,
+                    runSpacing: 8,
                     children: restaurant.cuisineTypes.map((cuisine) {
                       return Chip(
                         label: Text(cuisine),
@@ -138,6 +139,10 @@ class RestaurantDetailsScreen extends StatelessWidget {
                         labelStyle: const TextStyle(
                           color: AppColors.primaryGreen,
                           fontWeight: FontWeight.w600,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
                         ),
                       );
                     }).toList(),
@@ -189,7 +194,7 @@ class RestaurantDetailsScreen extends StatelessWidget {
                   ),
                 ),
 
-                const Divider(height: 32),
+                const Divider(height: 40, thickness: 1),
 
                 // Services Section
                 _buildSection(
@@ -216,7 +221,7 @@ class RestaurantDetailsScreen extends StatelessWidget {
                   ),
                 ),
 
-                const Divider(height: 32),
+                const Divider(height: 40, thickness: 1),
 
                 // Action Buttons
                 Padding(
