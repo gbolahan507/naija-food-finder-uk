@@ -365,9 +365,6 @@ ${restaurant.isOpenNow ? '🟢 Open now!' : '🔴 Currently closed'}
 Found via Naija Food Finder UK 🇬🇧
   ''';
 
-    Share.share(
-      shareText,
-      subject: restaurant.name,
-    );
+    SharePlus.instance.share(ShareParams(text: shareText));
   }
 }
