@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/providers/restaurants_provider.dart';
 import '../widgets/restaurant_card.dart';
+import 'restaurant_details_screen.dart';
 import '../../../../core/constants/app_colors.dart';
 
 class FavoritesScreen extends ConsumerWidget {
@@ -83,8 +84,19 @@ class FavoritesScreen extends ConsumerWidget {
                       padding: const EdgeInsets.only(top: 8),
                       itemCount: favoriteRestaurants.length,
                       itemBuilder: (context, index) {
+                        final restaurant = favoriteRestaurants[index];
                         return RestaurantCard(
-                          restaurant: favoriteRestaurants[index],
+                          restaurant: restaurant,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RestaurantDetailsScreen(
+                                  restaurant: restaurant,
+                                ),
+                              ),
+                            );
+                          },
                         );
                       },
                     ),
