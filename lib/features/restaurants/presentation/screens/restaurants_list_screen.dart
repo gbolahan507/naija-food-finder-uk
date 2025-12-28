@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/providers/restaurants_provider.dart';
 import '../../data/models/restaurant_model.dart';
 import '../widgets/restaurant_card.dart';
+import 'restaurant_details_screen.dart';
 import '../../../../core/constants/app_colors.dart';
 
 class RestaurantsListScreen extends ConsumerStatefulWidget {
@@ -347,7 +348,19 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
         itemCount: restaurants.length,
         itemBuilder: (context, index) {
           final restaurant = restaurants[index];
-          return RestaurantCard(restaurant: restaurant);
+          return RestaurantCard(
+            restaurant: restaurant,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RestaurantDetailsScreen(
+                    restaurant: restaurant,
+                  ),
+                ),
+              );
+            },
+          );
         },
       ),
     );
