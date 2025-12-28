@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../data/models/restaurant_model.dart';
 import '../../../../core/constants/app_colors.dart';
 
@@ -259,6 +260,24 @@ class RestaurantDetailsScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: () {
+                            _shareRestaurant(context);
+                          },
+                          icon: const Icon(Icons.share),
+                          label: const Text('Share Restaurant'),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.all(16),
+                            side: const BorderSide(
+                              color: AppColors.primaryGreen,
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -326,6 +345,29 @@ class RestaurantDetailsScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _shareRestaurant(BuildContext context) {
+    final shareText = '''
+Check out ${restaurant.name}! 🇳🇬
+
+${restaurant.cuisineTypes.join(' • ')}
+⭐ ${restaurant.rating} (${restaurant.reviewCount} reviews)
+
+📍 ${restaurant.address}, ${restaurant.city}
+🚗 ${restaurant.distance} miles away
+
+${restaurant.hasDelivery ? '✅ Delivery available' : ''}
+${restaurant.hasTakeaway ? '✅ Takeaway available' : ''}
+${restaurant.isOpenNow ? '🟢 Open now!' : '🔴 Currently closed'}
+
+Found via Naija Food Finder UK 🇬🇧
+  ''';
+
+    Share.share(
+      shareText,
+      subject: restaurant.name,
     );
   }
 }
