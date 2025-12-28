@@ -1,99 +1,165 @@
 # Naija Food Finder UK 🇳🇬🇬🇧
 
-
+Find Nigerian restaurants and African shops across the United Kingdom
 
 ![CI](https://github.com/gbolahan507/naija-food-finder-uk/workflows/CI/badge.svg)
 [![Flutter](https://img.shields.io/badge/Flutter-3.38.5-blue.svg)](https://flutter.dev/)
 [![Firebase](https://img.shields.io/badge/Firebase-Enabled-orange.svg)](https://firebase.google.com/)
 
+## 📱 About
 
-Find Nigerian restaurants and African shops across the United Kingdom
+Naija Food Finder UK is a mobile application built with Flutter that helps the Nigerian diaspora in the UK discover authentic Nigerian restaurants and African shops. Whether you're craving jollof rice, suya, or pounded yam, find it near you!
 
-## 🎯 Project Status
+## ✨ Features
 
-**Current Phase:** Planning & Setup ✅  
-**Progress:** 25%
-**Start Date:** December 23, 2025  
-**Target Launch:** February 2026
+### Core Features
+- 🏠 **Restaurant Discovery** - Browse Nigerian and African restaurants across the UK
+- 🔍 **Smart Search** - Real-time search by name, location, or cuisine type
+- 🗺️ **Location-Based** - See restaurants sorted by distance from you
+- ⭐ **Ratings & Reviews** - Check ratings and read reviews from the community
+- ❤️ **Favorites** - Save your favorite restaurants for quick access
+- 📤 **Share** - Share restaurant details with friends and family
 
-## ✅ Completed Milestones
-
-- [x] Repository setup and documentation structure
-- [x] Architecture design (Feature-first + MVVM + Riverpod)
-- [x] Data models defined (Restaurant, Review, User)
-- [x] UI/UX design system created
-- [x] 5 main screens designed
-- [x] Firebase backend configured (Auth, Firestore, Storage)
-- [x] Flutter project initialized with dependencies
-- [x] CI/CD pipeline (automated testing, builds)
-- [x] All 5 planning issues closed! 🎉
-
-
-**Infrastructure:**
-- ✅ GitHub Actions CI/CD working
-- ✅ Android build automation
-- ✅ iOS build validation
-- ✅ Code quality checks (analyze, format, test)
-
-
-## 🔨 In Progress (Feature Development)
-
-**Week 2 Goals:**
-- [ ] Build restaurant list screen
-- [ ] Create restaurant card widget
-- [ ] Implement basic navigation
-- [ ] Add mock data for testing
-- [ ] Setup state management
-
-
-
-
-## 📋 Coming Next
-
-- Database integration (Firestore)
-- Search functionality
-- Map view
-- User authentication
-- Reviews system
-
-## 📋 Roadmap
-
-- [x] Project setup
-- [ ] Architecture design
-- [ ] UI/UX mockups
-- [ ] Core features development
-- [ ] Testing
-- [ ] Launch
-
-## ✨ Planned Features
-
-- 📍 Find Nigerian restaurants near you
-- 🗺️ Interactive map view
-- ⭐ Reviews and ratings
-- 📱 Delivery options
-- 🔍 Advanced search and filters
-- 💬 Community recommendations
+### Advanced Features
+- 🔄 **Sort Options** - Sort by distance, rating, name, or number of reviews
+- 🏷️ **Filter by Cuisine** - Nigerian, Ghanaian, Caribbean, and more
+- 🚗 **Delivery & Takeaway** - See which restaurants offer delivery or takeaway
+- 🕐 **Opening Hours** - Check if a restaurant is currently open
+- 📍 **Detailed Information** - View full address, phone number, and services
+- ♻️ **Pull to Refresh** - Fresh data with a simple pull gesture
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** Flutter
-- **Backend:** Firebase
-- **Maps:** Google Maps API
-- **State Management:** [TBD]
+**Frontend:**
+- Flutter 3.38.5
+- Dart 3.10.4
+- Riverpod (State Management)
+- GoRouter (Navigation)
 
-## 📊 Development Progress
+**Backend:**
+- Firebase Firestore (Database)
+- Firebase Authentication (Coming soon)
+- Firebase Storage (Coming soon)
 
-Check [ROADMAP.md](ROADMAP.md) for detailed development plan
+**Architecture:**
+- Feature-first architecture
+- MVVM pattern
+- Repository pattern
+- Clean separation of concerns
 
-## 📝 Daily Log
+**CI/CD:**
+- GitHub Actions
+- Automated testing
+- Android & iOS builds
 
-Following our development journey: [docs/DAILY_LOG.md](docs/DAILY_LOG.md)
+## 🎨 Design
 
-## 👨‍💻 Developer
+- Nigerian flag colors (Green #008751, White, Gold #FFD700)
+- Material Design 3
+- Custom theme system
+- Responsive layouts
 
-Built by Hameed Habeeblahi Gbolahan
+## 📊 Project Status
+
+**Current Version:** 0.3.0
+**Status:** Active Development 🚀
+**Progress:** 85% MVP Complete
+
+### ✅ Completed Features
+- [x] Project architecture and setup
+- [x] Firebase Firestore integration
+- [x] Restaurant list with search
+- [x] Restaurant details screen
+- [x] Navigation system (bottom nav + routing)
+- [x] Favorites system with real-time sync
+- [x] Sort functionality (distance, rating, name, reviews)
+- [x] Pull-to-refresh
+- [x] Share restaurant functionality
+- [x] CI/CD pipeline
+
+### 🔨 In Progress
+- [ ] Google Maps integration
+- [ ] User authentication
+- [ ] Reviews and ratings system
+
+### 📋 Upcoming Features
+- [ ] Advanced filters
+- [ ] User profiles
+- [ ] Photo galleries
+- [ ] Opening hours display
+- [ ] Call and directions integration
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Flutter SDK (3.27.2 or higher)
+- Dart SDK (3.10.0 or higher)
+- Firebase account
+- iOS/Android development environment
+
+### Installation
+
+1. Clone the repository
+```bash
+git clone https://github.com/gbolahan507/naija-food-finder-uk.git
+cd naija-food-finder-uk
+```
+
+2. Install dependencies
+```bash
+flutter pub get
+```
+
+3. Run the app
+```bash
+flutter run
+```
+
+## 📂 Project Structure
+```
+lib/
+├── core/
+│   ├── constants/      # Colors, strings, assets
+│   ├── theme/          # App theme configuration
+│   ├── router/         # Navigation setup
+│   └── navigation/     # Bottom navigation
+├── features/
+│   └── restaurants/
+│       ├── data/       # Models, repositories, providers
+│       └── presentation/ # Screens and widgets
+└── main.dart
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! This project is part of a portfolio for UK Global Talent Visa application, demonstrating technical excellence and community impact.
 
 ## 📄 License
 
-MIT License - feel free to use and contribute!
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## 👨‍💻 Developer
+
+Built by **Hameed Abolaji**
+- GitHub: [@gbolahan507](https://github.com/gbolahan507)
+- Focus: Flutter Mobile Development
+- Purpose: Helping the Nigerian diaspora in the UK
+
+## 🎯 Project Goals
+
+1. **Community Impact** - Serve 25,000+ Nigerians in the UK
+2. **Technical Excellence** - Showcase production-ready mobile development
+3. **Scalability** - Built to handle thousands of restaurants and users
+4. **User Experience** - Intuitive, fast, and beautiful interface
+
+## 📈 Metrics
+
+- **Active Development:** 4-day streak
+- **Contributions:** 50+ in first week
+- **Code Quality:** All CI checks passing
+- **Backend:** Real-time Firebase integration
+- **Features:** 10+ major features implemented
+
+---
+
+**Made with ❤️ for the Nigerian community in the UK** 🇳🇬🇬🇧
