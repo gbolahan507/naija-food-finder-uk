@@ -236,6 +236,33 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
                 var restaurants = applyFilters(allRestaurants);
                 restaurants = applySort(restaurants);
 
+                // Total count badge
+                if (_searchController.text.isEmpty && selectedFilter == 'All') {
+                  return Column(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        color: AppColors.extraLightGrey,
+                        child: Text(
+                          'Showing ${restaurants.length} ${restaurants.length == 1 ? 'restaurant' : 'restaurants'}',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: AppColors.lightText,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: _buildRestaurantList(restaurants),
+                      ),
+                    ],
+                  );
+                }
+
                 // Results count
                 if (_searchController.text.isNotEmpty ||
                     selectedFilter != 'All') {
