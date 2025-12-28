@@ -102,4 +102,25 @@ class AppStrings {
   static const String successReviewSubmitted = 'Review submitted successfully!';
   static const String successAddedToFavorites = 'Added to favorites!';
   static const String successRemovedFromFavorites = 'Removed from favorites!';
+
+  // Share Messages
+  static const String shareRestaurantTitle = 'Share Restaurant';
+  static const String shareErrorMessage = 'Unable to share at this time';
+  static const String shareFooter = 'Found via Naija Food Finder UK 🇬🇧';
+
+  // Filter Chips
+  static const String chipAll = 'All';
+  static const String chipNigerian = 'Nigerian';
+  static const String chipDelivery = 'Delivery';
+  static const String chipOpenNow = 'Open Now';
+
+  // Sort Options
+  static const String sortDistance = 'Distance';
+  static const String sortRating = 'Rating';
+  static const String sortName = 'Name';
+  static const String sortReviews = 'Reviews';
+  static const String sortByDistance = 'Sort by Distance';
+  static const String sortByRating = 'Sort by Rating';
+  static const String sortByName = 'Sort by Name';
+  static const String sortByReviews = 'Sort by Reviews';
 }
