@@ -117,7 +117,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 48),
 
                 // Welcome Text
-                Text(
+                const Text(
                   'Welcome Back!',
                   style: TextStyle(
                     fontSize: 24,
@@ -127,7 +127,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
-                Text(
+                const Text(
                   'Sign in to continue',
                   style: TextStyle(
                     fontSize: 16,
