@@ -371,7 +371,8 @@ Found via Naija Food Finder UK 🇬🇧
   ''';
 
     try {
-      final result = await SharePlus.instance.share(ShareParams(text: shareText));
+      final result =
+          await SharePlus.instance.share(ShareParams(text: shareText));
 
       // Show success feedback if share was completed
       if (context.mounted && result.status == ShareResultStatus.success) {

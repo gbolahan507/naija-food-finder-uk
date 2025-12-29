@@ -203,8 +203,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           : Icons.visibility_off_outlined,
                     ),
                     onPressed: () {
-                      setState(
-                          () => _obscureConfirmPassword = !_obscureConfirmPassword);
+                      setState(() =>
+                          _obscureConfirmPassword = !_obscureConfirmPassword);
                     },
                   ),
                   validator: (value) {
