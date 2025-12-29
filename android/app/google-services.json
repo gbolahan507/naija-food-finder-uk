@@ -12,7 +12,20 @@
           "package_name": "com.naijafoodfinder.naija_food_finder_uk"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "620071589254-gfoe3r31j4p9v3rebavg97mp10du55tc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.naijafoodfinder.naija_food_finder_uk",
+            "certificate_hash": "0d7fdf90e7a3ad1b9db17f59f4f3f725fec0d947"
+          }
+        },
+        {
+          "client_id": "620071589254-1ce394gd44fgi1pd09359772si9j1gcm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCWEHBu_RoEf3nZQX_peVgeVzd4UCrFIaM"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "620071589254-1ce394gd44fgi1pd09359772si9j1gcm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "620071589254-l528qj9oo3u0hoct5545i30idgg6rcer.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.naijafoodfinder.naijaFoodFinderUk"
+              }
+            }
+          ]
         }
       }
     }
