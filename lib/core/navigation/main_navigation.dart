@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naija_food_finder_uk/features/restaurants/data/providers/restaurants_provider.dart';
 import 'package:naija_food_finder_uk/features/restaurants/presentation/screens/favorites_screen.dart';
+import '../../features/auth/data/providers/auth_provider.dart';
+import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/restaurants/presentation/screens/restaurants_list_screen.dart';
 import '../constants/app_colors.dart';
 
@@ -156,91 +158,205 @@ class ProfileTabScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authStateProvider);
     final favoritesAsync = ref.watch(favoritesProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const CircleAvatar(
-              radius: 50,
-              backgroundColor: AppColors.primaryGreen,
-              child: Icon(
-                Icons.person,
-                size: 50,
-                color: Colors.white,
-              ),
+    return authState.when(
+      data: (user) {
+        if (user == null) {
+          // Not signed in
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Profile'),
             ),
-            const SizedBox(height: 16),
-            const Text(
-              'Guest User',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Sign in to save your preferences',
-              style: TextStyle(
-                fontSize: 16,
-                color: AppColors.lightText,
-              ),
-            ),
-            const SizedBox(height: 32),
-
-            // Favorites Button
-            SizedBox(
-              width: 200,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const FavoritesScreen(),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircleAvatar(
+                    radius: 50,
+                    backgroundColor: AppColors.primaryGreen,
+                    child: Icon(
+                      Icons.person,
+                      size: 50,
+                      color: Colors.white,
                     ),
-                  );
-                },
-                icon: const Icon(Icons.favorite),
-                label: favoritesAsync.when(
-                  data: (favorites) => Text('Favorites (${favorites.length})'),
-                  loading: () => const Text('Favorites'),
-                  error: (_, __) => const Text('Favorites'),
-                ),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.all(16),
-                ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Guest User',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Sign in to save your preferences',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppColors.lightText,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+
+                  // Favorites Button
+                  SizedBox(
+                    width: 200,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const FavoritesScreen(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.favorite),
+                      label: favoritesAsync.when(
+                        data: (favorites) =>
+                            Text('Favorites (${favorites.length})'),
+                        loading: () => const Text('Favorites'),
+                        error: (_, __) => const Text('Favorites'),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(16),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  SizedBox(
+                    width: 200,
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.login),
+                      label: const Text('Sign In'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.all(16),
+                        side: const BorderSide(
+                          color: AppColors.primaryGreen,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+          );
+        }
 
-            const SizedBox(height: 12),
-
-            SizedBox(
-              width: 200,
-              child: OutlinedButton.icon(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Sign in feature coming soon!'),
-                    ),
-                  );
+        // User is signed in
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Profile'),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () async {
+                  final authController = ref.read(authControllerProvider);
+                  await authController.signOut();
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Signed out successfully'),
+                        backgroundColor: AppColors.success,
+                      ),
+                    );
+                  }
                 },
-                icon: const Icon(Icons.login),
-                label: const Text('Sign In'),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.all(16),
-                  side: const BorderSide(
-                    color: AppColors.primaryGreen,
-                    width: 2,
+              ),
+            ],
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundColor: AppColors.primaryGreen,
+                  backgroundImage:
+                      user.photoURL != null ? NetworkImage(user.photoURL!) : null,
+                  child: user.photoURL == null
+                      ? const Icon(
+                          Icons.person,
+                          size: 50,
+                          color: Colors.white,
+                        )
+                      : null,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  user.displayName ?? 'User',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
+                const SizedBox(height: 4),
+                Text(
+                  user.email ?? '',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: AppColors.lightText,
+                  ),
+                ),
+                const SizedBox(height: 32),
+
+                // Favorites Button
+                SizedBox(
+                  width: 200,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const FavoritesScreen(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.favorite),
+                    label: favoritesAsync.when(
+                      data: (favorites) =>
+                          Text('Favorites (${favorites.length})'),
+                      loading: () => const Text('Favorites'),
+                      error: (_, __) => const Text('Favorites'),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(16),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
+        );
+      },
+      loading: () => Scaffold(
+        appBar: AppBar(
+          title: const Text('Profile'),
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(
+            color: AppColors.primaryGreen,
+          ),
+        ),
+      ),
+      error: (error, stack) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Profile'),
+        ),
+        body: Center(
+          child: Text('Error: $error'),
         ),
       ),
     );
