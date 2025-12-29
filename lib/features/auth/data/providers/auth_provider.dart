@@ -47,9 +47,8 @@ class AuthState {
 /// Auth controller for handling authentication actions
 class AuthController {
   final AuthRepository _authRepository;
-  final Ref _ref;
 
-  AuthController(this._authRepository, this._ref);
+  AuthController(this._authRepository);
 
   /// Sign in with email and password
   Future<void> signInWithEmailAndPassword({
@@ -114,5 +113,5 @@ class AuthController {
 /// Provider for AuthController
 final authControllerProvider = Provider<AuthController>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
-  return AuthController(authRepository, ref);
+  return AuthController(authRepository);
 });
