@@ -19,6 +19,7 @@ Naija Food Finder UK is a mobile application built with Flutter that helps the N
 - ⭐ **Ratings & Reviews** - Check ratings and read reviews from the community
 - ❤️ **Favorites** - Save your favorite restaurants for quick access
 - 📤 **Share** - Share restaurant details with friends and family
+- 🔐 **User Authentication** - Sign in with email/password or Google
 
 ### Advanced Features
 - 🔄 **Sort Options** - Sort by distance, rating, name, or number of reviews
@@ -27,6 +28,8 @@ Naija Food Finder UK is a mobile application built with Flutter that helps the N
 - 🕐 **Opening Hours** - Check if a restaurant is currently open
 - 📍 **Detailed Information** - View full address, phone number, and services
 - ♻️ **Pull to Refresh** - Fresh data with a simple pull gesture
+- 👤 **User Profiles** - Personalized profiles with authentication
+- 🔄 **Real-time Sync** - Data syncs across devices when signed in
 
 ## 🛠️ Tech Stack
 
@@ -38,7 +41,7 @@ Naija Food Finder UK is a mobile application built with Flutter that helps the N
 
 **Backend:**
 - Firebase Firestore (Database)
-- Firebase Authentication (Coming soon)
+- Firebase Authentication (Email/Password + Google Sign-In)
 - Firebase Storage (Coming soon)
 
 **Architecture:**
@@ -61,9 +64,9 @@ Naija Food Finder UK is a mobile application built with Flutter that helps the N
 
 ## 📊 Project Status
 
-**Current Version:** 0.3.0
+**Current Version:** 0.4.0
 **Status:** Active Development 🚀
-**Progress:** 85% MVP Complete
+**Progress:** 90% MVP Complete
 
 ### ✅ Completed Features
 - [x] Project architecture and setup
@@ -75,12 +78,16 @@ Naija Food Finder UK is a mobile application built with Flutter that helps the N
 - [x] Sort functionality (distance, rating, name, reviews)
 - [x] Pull-to-refresh
 - [x] Share restaurant functionality
+- [x] User authentication (Email/Password + Google Sign-In)
+- [x] User profile management
+- [x] Sign in/Sign up screens
+- [x] Logout functionality
 - [x] CI/CD pipeline
 
 ### 🔨 In Progress
 - [ ] Google Maps integration
-- [ ] User authentication
 - [ ] Reviews and ratings system
+- [ ] User-specific data sync
 
 ### 📋 Upcoming Features
 - [ ] Advanced filters
@@ -154,11 +161,12 @@ Built by **Hameed Abolaji**
 
 ## 📈 Metrics
 
-- **Active Development:** 4-day streak
-- **Contributions:** 50+ in first week
+- **Active Development:** 5-day streak
+- **Contributions:** 60+ contributions
 - **Code Quality:** All CI checks passing
 - **Backend:** Real-time Firebase integration
-- **Features:** 10+ major features implemented
+- **Authentication:** Email/Password + Google Sign-In
+- **Features:** 15+ major features implemented
 
 ---
 
