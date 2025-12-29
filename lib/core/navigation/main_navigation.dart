@@ -284,8 +284,9 @@ class ProfileTabScreen extends ConsumerWidget {
                 CircleAvatar(
                   radius: 50,
                   backgroundColor: AppColors.primaryGreen,
-                  backgroundImage:
-                      user.photoURL != null ? NetworkImage(user.photoURL!) : null,
+                  backgroundImage: user.photoURL != null
+                      ? NetworkImage(user.photoURL!)
+                      : null,
                   child: user.photoURL == null
                       ? const Icon(
                           Icons.person,
