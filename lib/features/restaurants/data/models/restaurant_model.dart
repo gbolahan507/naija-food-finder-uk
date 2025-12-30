@@ -11,6 +11,8 @@ class Restaurant {
   final bool hasTakeaway;
   final bool isOpenNow;
   final String imageUrl;
+  final double? latitude;
+  final double? longitude;
 
   const Restaurant({
     required this.id,
@@ -25,6 +27,8 @@ class Restaurant {
     this.hasTakeaway = false,
     this.isOpenNow = false,
     required this.imageUrl,
+    this.latitude,
+    this.longitude,
   });
 
   // Factory method to create from Firestore document
@@ -42,6 +46,8 @@ class Restaurant {
       hasTakeaway: data['hasTakeaway'] as bool? ?? false,
       isOpenNow: data['isOpenNow'] as bool? ?? false,
       imageUrl: data['imageUrl'] as String? ?? '',
+      latitude: (data['latitude'] as num?)?.toDouble(),
+      longitude: (data['longitude'] as num?)?.toDouble(),
     );
   }
 
@@ -59,6 +65,8 @@ class Restaurant {
       'hasTakeaway': hasTakeaway,
       'isOpenNow': isOpenNow,
       'imageUrl': imageUrl,
+      'latitude': latitude,
+      'longitude': longitude,
     };
   }
 }
