@@ -22,6 +22,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   final Set<Marker> _markers = {};
   bool _isLoading = true;
   final Map<String, Restaurant> _restaurantMap = {};
+  MapType _currentMapType = MapType.normal;
 
   @override
   void initState() {
@@ -178,6 +179,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 zoomControlsEnabled: false,
                 mapToolbarEnabled: false,
                 compassEnabled: true,
+                mapType: _currentMapType,
               ),
 
               // Loading indicator
@@ -220,15 +222,72 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                         size: 20,
                       ),
                       const SizedBox(width: 8),
-                      Text(
-                        '${restaurants.length} restaurants nearby',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.darkText,
+                      Expanded(
+                        child: Text(
+                          '${restaurants.length} restaurants on map',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.darkText,
+                          ),
                         ),
                       ),
+                      // Search indicator
+                      if (ref.watch(searchQueryProvider).isNotEmpty)
+                        Container(
+                          margin: const EdgeInsets.only(left: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryGreen.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.search,
+                                size: 12,
+                                color: AppColors.primaryGreen,
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                'Filtered',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.primaryGreen,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                     ],
+                  ),
+                ),
+              ),
+
+              // Map type toggle button
+              Positioned(
+                bottom: 16,
+                right: 16,
+                child: FloatingActionButton(
+                  mini: true,
+                  backgroundColor: Colors.white,
+                  onPressed: () {
+                    setState(() {
+                      _currentMapType = _currentMapType == MapType.normal
+                          ? MapType.satellite
+                          : MapType.normal;
+                    });
+                  },
+                  child: Icon(
+                    _currentMapType == MapType.normal
+                        ? Icons.satellite_alt
+                        : Icons.map,
+                    color: AppColors.primaryGreen,
                   ),
                 ),
               ),
