@@ -5,6 +5,7 @@ import 'package:naija_food_finder_uk/features/restaurants/presentation/screens/f
 import '../../features/auth/data/providers/auth_provider.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/restaurants/presentation/screens/restaurants_list_screen.dart';
+import '../../features/restaurants/presentation/screens/map_screen.dart';
 import '../constants/app_colors.dart';
 
 class MainNavigation extends StatefulWidget {
@@ -21,7 +22,7 @@ class _MainNavigationState extends State<MainNavigation> {
   final List<Widget> _screens = [
     const RestaurantsListScreen(),
     const SearchTabScreen(),
-    const MapTabScreen(),
+    const MapScreen(),
     const ProfileTabScreen(),
   ];
 

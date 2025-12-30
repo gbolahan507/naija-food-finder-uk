@@ -3,7 +3,6 @@ import 'models/restaurant_model.dart';
 class MockRestaurants {
   static final List<Restaurant> restaurants = [
     const Restaurant(
-      // ← Add const here
       id: '1',
       name: 'Mama\'s Kitchen',
       address: '123 High Street',
@@ -16,9 +15,10 @@ class MockRestaurants {
       hasTakeaway: true,
       isOpenNow: true,
       imageUrl: 'https://via.placeholder.com/300x200?text=Mama%27s+Kitchen',
+      latitude: 51.5074,
+      longitude: -0.1278,
     ),
     const Restaurant(
-      // ← Add const here
       id: '2',
       name: 'Jollof Palace',
       address: '45 Market Road',
@@ -31,9 +31,10 @@ class MockRestaurants {
       hasTakeaway: false,
       isOpenNow: true,
       imageUrl: 'https://via.placeholder.com/300x200?text=Jollof+Palace',
+      latitude: 51.5155,
+      longitude: -0.1410,
     ),
     const Restaurant(
-      // ← Add const here
       id: '3',
       name: 'Suya Spot',
       address: '78 Oxford Street',
@@ -46,9 +47,10 @@ class MockRestaurants {
       hasTakeaway: true,
       isOpenNow: false,
       imageUrl: 'https://via.placeholder.com/300x200?text=Suya+Spot',
+      latitude: 51.5152,
+      longitude: -0.1419,
     ),
     const Restaurant(
-      // ← Add const here
       id: '4',
       name: 'Eko Kitchen',
       address: '90 Camden High Street',
@@ -61,9 +63,10 @@ class MockRestaurants {
       hasTakeaway: true,
       isOpenNow: true,
       imageUrl: 'https://via.placeholder.com/300x200?text=Eko+Kitchen',
+      latitude: 51.5392,
+      longitude: -0.1426,
     ),
     const Restaurant(
-      // ← Add const here
       id: '5',
       name: 'Naija Flavours',
       address: '34 King Street',
@@ -76,6 +79,8 @@ class MockRestaurants {
       hasTakeaway: false,
       isOpenNow: true,
       imageUrl: 'https://via.placeholder.com/300x200?text=Naija+Flavours',
+      latitude: 53.4808,
+      longitude: -2.2426,
     ),
   ];
 }
