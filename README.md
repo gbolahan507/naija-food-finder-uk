@@ -15,7 +15,8 @@ Naija Food Finder UK is a mobile application built with Flutter that helps the N
 ### Core Features
 - 🏠 **Restaurant Discovery** - Browse Nigerian and African restaurants across the UK
 - 🔍 **Smart Search** - Real-time search by name, location, or cuisine type
-- 🗺️ **Location-Based** - See restaurants sorted by distance from you
+- 🗺️ **Interactive Map View** - Visualize all restaurants on Google Maps with custom markers
+- 📍 **Location-Based** - See restaurants sorted by distance from you
 - ⭐ **Ratings & Reviews** - Check ratings and read reviews from the community
 - ❤️ **Favorites** - Save your favorite restaurants for quick access
 - 📤 **Share** - Share restaurant details with friends and family
@@ -24,6 +25,13 @@ Naija Food Finder UK is a mobile application built with Flutter that helps the N
 ### Advanced Features
 - 🔄 **Sort Options** - Sort by distance, rating, name, or number of reviews
 - 🏷️ **Filter by Cuisine** - Nigerian, Ghanaian, Caribbean, and more
+- 🗺️ **Map Features**:
+  - Interactive restaurant markers with info windows
+  - Switch between normal and satellite map views
+  - Tap markers to view restaurant details
+  - Auto-center to fit all visible restaurants
+  - Real-time filter integration (search/filter sync with map)
+  - Filter status indicator on map
 - 🚗 **Delivery & Takeaway** - See which restaurants offer delivery or takeaway
 - 🕐 **Opening Hours** - Check if a restaurant is currently open
 - 📍 **Detailed Information** - View full address, phone number, and services
@@ -38,11 +46,14 @@ Naija Food Finder UK is a mobile application built with Flutter that helps the N
 - Dart 3.10.4
 - Riverpod (State Management)
 - GoRouter (Navigation)
+- Google Maps Flutter (Map Integration)
+- Geolocator (Location Services)
 
 **Backend:**
 - Firebase Firestore (Database)
 - Firebase Authentication (Email/Password + Google Sign-In)
 - Firebase Storage (Coming soon)
+- Google Maps API (Map & Geolocation Services)
 
 **Architecture:**
 - Feature-first architecture
@@ -82,12 +93,16 @@ Naija Food Finder UK is a mobile application built with Flutter that helps the N
 - [x] User profile management
 - [x] Sign in/Sign up screens
 - [x] Logout functionality
+- [x] Google Maps integration with interactive markers
+- [x] Map view with normal/satellite toggle
+- [x] Filter integration with map (search/filter sync)
+- [x] Location service helper
 - [x] CI/CD pipeline
 
 ### 🔨 In Progress
-- [ ] Google Maps integration
 - [ ] Reviews and ratings system
 - [ ] User-specific data sync
+- [ ] Advanced map features (clustering, custom markers)
 
 ### 📋 Upcoming Features
 - [ ] Advanced filters
@@ -117,7 +132,21 @@ cd naija-food-finder-uk
 flutter pub get
 ```
 
-3. Run the app
+3. Configure Google Maps API
+   - Get a Google Maps API key from [Google Cloud Console](https://console.cloud.google.com/)
+   - Enable Maps SDK for Android and iOS
+   - For **Android**: Add your API key to `android/app/src/main/AndroidManifest.xml`
+     ```xml
+     <meta-data
+         android:name="com.google.android.geo.API_KEY"
+         android:value="YOUR_API_KEY_HERE" />
+     ```
+   - For **iOS**: Add your API key to `ios/Runner/AppDelegate.swift`
+     ```swift
+     GMSServices.provideAPIKey("YOUR_API_KEY_HERE")
+     ```
+
+4. Run the app
 ```bash
 flutter run
 ```
@@ -129,11 +158,13 @@ lib/
 │   ├── constants/      # Colors, strings, assets
 │   ├── theme/          # App theme configuration
 │   ├── router/         # Navigation setup
-│   └── navigation/     # Bottom navigation
+│   ├── navigation/     # Bottom navigation
+│   └── services/       # Location service, utilities
 ├── features/
+│   ├── auth/           # Authentication (login, signup, profile)
 │   └── restaurants/
 │       ├── data/       # Models, repositories, providers
-│       └── presentation/ # Screens and widgets
+│       └── presentation/ # Screens (list, map, details) and widgets
 └── main.dart
 ```
 
