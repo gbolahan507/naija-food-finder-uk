@@ -26,44 +26,48 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   @override
   void initState() {
     super.initState();
-    _loadRestaurantMarkers();
+    // Markers will be loaded when restaurants data is available
   }
 
-  Future<void> _loadRestaurantMarkers() async {
+  void _loadRestaurantMarkers(List<Restaurant> restaurants) {
     setState(() => _isLoading = true);
 
-    // Wait a bit for restaurants to load
-    await Future.delayed(const Duration(milliseconds: 500));
+    // Clear existing markers and restaurant map
+    _markers.clear();
+    _restaurantMap.clear();
 
-    final restaurantsAsync = ref.read(restaurantsProvider);
+    final markers = restaurants.map((restaurant) {
+      // Store restaurant in map for later retrieval
+      _restaurantMap[restaurant.id] = restaurant;
 
-    restaurantsAsync.whenData((restaurants) {
-      final markers = restaurants.map((restaurant) {
-        // Store restaurant in map for later retrieval
-        _restaurantMap[restaurant.id] = restaurant;
+      return Marker(
+        markerId: MarkerId(restaurant.id),
+        position: LatLng(
+          restaurant.latitude ?? 51.5074,
+          restaurant.longitude ?? -0.1278,
+        ),
+        infoWindow: InfoWindow(
+          title: restaurant.name,
+          snippet: '${restaurant.rating} ⭐ • ${restaurant.distance}mi away',
+        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(
+          BitmapDescriptor.hueGreen,
+        ),
+        onTap: () => _onMarkerTapped(restaurant.id),
+      );
+    }).toSet();
 
-        return Marker(
-          markerId: MarkerId(restaurant.id),
-          position: LatLng(
-            restaurant.latitude ?? 51.5074,
-            restaurant.longitude ?? -0.1278,
-          ),
-          infoWindow: InfoWindow(
-            title: restaurant.name,
-            snippet: '${restaurant.rating} ⭐ • ${restaurant.distance}mi away',
-          ),
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueGreen,
-          ),
-          onTap: () => _onMarkerTapped(restaurant.id),
-        );
-      }).toSet();
-
-      setState(() {
-        _markers.addAll(markers);
-        _isLoading = false;
-      });
+    setState(() {
+      _markers.addAll(markers);
+      _isLoading = false;
     });
+
+    // Auto-recenter when markers change
+    if (_markers.isNotEmpty && _mapController != null) {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        _recenterMap();
+      });
+    }
   }
 
   void _onMarkerTapped(String restaurantId) {
@@ -133,7 +137,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final restaurantsAsync = ref.watch(restaurantsProvider);
+    final restaurantsAsync = ref.watch(filteredRestaurantsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -155,6 +159,11 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       ),
       body: restaurantsAsync.when(
         data: (restaurants) {
+          // Update markers when filtered restaurants change
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _loadRestaurantMarkers(restaurants);
+          });
+
           return Stack(
             children: [
               GoogleMap(
