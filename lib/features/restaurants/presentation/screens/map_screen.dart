@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../data/models/restaurant_model.dart';
 import '../../data/providers/restaurants_provider.dart';
+import 'restaurant_details_screen.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
   const MapScreen({super.key});
@@ -19,6 +21,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   final Set<Marker> _markers = {};
   bool _isLoading = true;
+  final Map<String, Restaurant> _restaurantMap = {};
 
   @override
   void initState() {
@@ -36,6 +39,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
     restaurantsAsync.whenData((restaurants) {
       final markers = restaurants.map((restaurant) {
+        // Store restaurant in map for later retrieval
+        _restaurantMap[restaurant.id] = restaurant;
+
         return Marker(
           markerId: MarkerId(restaurant.id),
           position: LatLng(
@@ -49,6 +55,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           icon: BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueGreen,
           ),
+          onTap: () => _onMarkerTapped(restaurant.id),
         );
       }).toSet();
 
@@ -57,6 +64,20 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         _isLoading = false;
       });
     });
+  }
+
+  void _onMarkerTapped(String restaurantId) {
+    final restaurant = _restaurantMap[restaurantId];
+    if (restaurant != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RestaurantDetailsScreen(
+            restaurant: restaurant,
+          ),
+        ),
+      );
+    }
   }
 
   void _onMapCreated(GoogleMapController controller) {
