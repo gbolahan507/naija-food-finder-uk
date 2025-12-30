@@ -86,15 +86,43 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   Future<void> _recenterMap() async {
     if (_mapController != null) {
-      _mapController!.animateCamera(
-        CameraUpdate.newCameraPosition(
-          const CameraPosition(
-            target: _defaultLocation,
-            zoom: 12.0,
+      // If we have markers, fit them all in view
+      if (_markers.isNotEmpty) {
+        final bounds = _calculateBounds();
+        _mapController!.animateCamera(
+          CameraUpdate.newLatLngBounds(bounds, 50),
+        );
+      } else {
+        // Otherwise, center on default location
+        _mapController!.animateCamera(
+          CameraUpdate.newCameraPosition(
+            const CameraPosition(
+              target: _defaultLocation,
+              zoom: 12.0,
+            ),
           ),
-        ),
-      );
+        );
+      }
     }
+  }
+
+  LatLngBounds _calculateBounds() {
+    double? minLat, maxLat, minLng, maxLng;
+
+    for (final marker in _markers) {
+      final lat = marker.position.latitude;
+      final lng = marker.position.longitude;
+
+      if (minLat == null || lat < minLat) minLat = lat;
+      if (maxLat == null || lat > maxLat) maxLat = lat;
+      if (minLng == null || lng < minLng) minLng = lng;
+      if (maxLng == null || lng > maxLng) maxLng = lng;
+    }
+
+    return LatLngBounds(
+      southwest: LatLng(minLat ?? 0, minLng ?? 0),
+      northeast: LatLng(maxLat ?? 0, maxLng ?? 0),
+    );
   }
 
   @override
