@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../data/models/restaurant_model.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../auth/data/providers/auth_provider.dart';
+import '../../data/providers/restaurants_provider.dart';
+import '../widgets/review_card.dart';
+import 'write_review_screen.dart';
 
-class RestaurantDetailsScreen extends StatelessWidget {
+class RestaurantDetailsScreen extends ConsumerWidget {
   final Restaurant restaurant;
 
   const RestaurantDetailsScreen({
@@ -12,7 +17,11 @@ class RestaurantDetailsScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final reviewsAsync = ref.watch(restaurantReviewsProvider(restaurant.id));
+    final authState = ref.watch(authStateProvider);
+    final currentUser = authState.value;
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -279,6 +288,180 @@ class RestaurantDetailsScreen extends StatelessWidget {
                             side: const BorderSide(
                               color: AppColors.primaryGreen,
                               width: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const Divider(height: 40, thickness: 1),
+
+                // Reviews Section
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.reviews,
+                              color: AppColors.primaryGreen, size: 24),
+                          const SizedBox(width: 8),
+                          const Text(
+                            'Reviews',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const Spacer(),
+                          if (currentUser != null)
+                            TextButton.icon(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => WriteReviewScreen(
+                                      restaurant: restaurant,
+                                    ),
+                                  ),
+                                );
+                              },
+                              icon: const Icon(Icons.rate_review, size: 18),
+                              label: const Text('Write Review'),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      reviewsAsync.when(
+                        data: (reviews) {
+                          if (reviews.isEmpty) {
+                            return Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(32),
+                                child: Column(
+                                  children: [
+                                    const Icon(
+                                      Icons.rate_review_outlined,
+                                      size: 48,
+                                      color: AppColors.mediumGrey,
+                                    ),
+                                    const SizedBox(height: 16),
+                                    const Text(
+                                      'No reviews yet',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.darkText,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      currentUser != null
+                                          ? 'Be the first to review!'
+                                          : 'Sign in to write a review',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: AppColors.lightText,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                          return Column(
+                            children: reviews.map((review) {
+                              return ReviewCard(
+                                review: review,
+                                onEdit: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => WriteReviewScreen(
+                                        restaurant: restaurant,
+                                        existingReview: review,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                onDelete: () async {
+                                  final confirmed = await showDialog<bool>(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text('Delete Review'),
+                                      content: const Text(
+                                        'Are you sure you want to delete this review?',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, false),
+                                          child: const Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, true),
+                                          child: const Text(
+                                            'Delete',
+                                            style: TextStyle(
+                                                color: AppColors.error),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+
+                                  if (confirmed == true) {
+                                    try {
+                                      await ref
+                                          .read(reviewsRepositoryProvider)
+                                          .deleteReview(review.id);
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content:
+                                                Text('Review deleted'),
+                                            backgroundColor: AppColors.success,
+                                          ),
+                                        );
+                                      }
+                                    } catch (e) {
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content:
+                                                Text('Error: ${e.toString()}'),
+                                            backgroundColor: AppColors.error,
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  }
+                                },
+                              );
+                            }).toList(),
+                          );
+                        },
+                        loading: () => const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(32),
+                            child: CircularProgressIndicator(
+                              color: AppColors.primaryGreen,
+                            ),
+                          ),
+                        ),
+                        error: (error, stack) => Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(32),
+                            child: Text(
+                              'Error loading reviews: $error',
+                              style: const TextStyle(color: AppColors.error),
+                              textAlign: TextAlign.center,
                             ),
                           ),
                         ),
