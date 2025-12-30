@@ -49,10 +49,13 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         ),
         infoWindow: InfoWindow(
           title: restaurant.name,
-          snippet: '${restaurant.rating} ⭐ • ${restaurant.distance}mi away',
+          snippet:
+              '${restaurant.rating} ⭐ • ${restaurant.distance}mi away${restaurant.isOpenNow ? ' • Open' : ' • Closed'}',
         ),
         icon: BitmapDescriptor.defaultMarkerWithHue(
-          BitmapDescriptor.hueGreen,
+          restaurant.isOpenNow
+              ? BitmapDescriptor.hueGreen
+              : BitmapDescriptor.hueRed,
         ),
         onTap: () => _onMarkerTapped(restaurant.id),
       );
