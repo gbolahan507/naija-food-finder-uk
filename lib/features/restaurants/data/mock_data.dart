@@ -1,8 +1,28 @@
 import 'models/restaurant_model.dart';
 
 class MockRestaurants {
+  static final List<DayHours> _standardHours = const [
+    DayHours(day: 'Monday', openTime: '11:00 AM', closeTime: '10:00 PM'),
+    DayHours(day: 'Tuesday', openTime: '11:00 AM', closeTime: '10:00 PM'),
+    DayHours(day: 'Wednesday', openTime: '11:00 AM', closeTime: '10:00 PM'),
+    DayHours(day: 'Thursday', openTime: '11:00 AM', closeTime: '10:00 PM'),
+    DayHours(day: 'Friday', openTime: '11:00 AM', closeTime: '11:00 PM'),
+    DayHours(day: 'Saturday', openTime: '12:00 PM', closeTime: '11:00 PM'),
+    DayHours(day: 'Sunday', openTime: '12:00 PM', closeTime: '9:00 PM'),
+  ];
+
+  static final List<DayHours> _lateNightHours = const [
+    DayHours(day: 'Monday', openTime: '12:00 PM', closeTime: '11:00 PM'),
+    DayHours(day: 'Tuesday', openTime: '12:00 PM', closeTime: '11:00 PM'),
+    DayHours(day: 'Wednesday', openTime: '12:00 PM', closeTime: '11:00 PM'),
+    DayHours(day: 'Thursday', openTime: '12:00 PM', closeTime: '12:00 AM'),
+    DayHours(day: 'Friday', openTime: '12:00 PM', closeTime: '2:00 AM'),
+    DayHours(day: 'Saturday', openTime: '12:00 PM', closeTime: '2:00 AM'),
+    DayHours(day: 'Sunday', isClosed: true),
+  ];
+
   static final List<Restaurant> restaurants = [
-    const Restaurant(
+    Restaurant(
       id: '1',
       name: 'Mama\'s Kitchen',
       address: '123 High Street',
@@ -17,8 +37,9 @@ class MockRestaurants {
       imageUrl: 'https://via.placeholder.com/300x200?text=Mama%27s+Kitchen',
       latitude: 51.5074,
       longitude: -0.1278,
+      openingHours: _standardHours,
     ),
-    const Restaurant(
+    Restaurant(
       id: '2',
       name: 'Jollof Palace',
       address: '45 Market Road',
@@ -33,8 +54,9 @@ class MockRestaurants {
       imageUrl: 'https://via.placeholder.com/300x200?text=Jollof+Palace',
       latitude: 51.5155,
       longitude: -0.1410,
+      openingHours: _standardHours,
     ),
-    const Restaurant(
+    Restaurant(
       id: '3',
       name: 'Suya Spot',
       address: '78 Oxford Street',
@@ -49,8 +71,9 @@ class MockRestaurants {
       imageUrl: 'https://via.placeholder.com/300x200?text=Suya+Spot',
       latitude: 51.5152,
       longitude: -0.1419,
+      openingHours: _lateNightHours, // Late night hours, closed Sunday
     ),
-    const Restaurant(
+    Restaurant(
       id: '4',
       name: 'Eko Kitchen',
       address: '90 Camden High Street',
@@ -65,8 +88,9 @@ class MockRestaurants {
       imageUrl: 'https://via.placeholder.com/300x200?text=Eko+Kitchen',
       latitude: 51.5392,
       longitude: -0.1426,
+      openingHours: _standardHours,
     ),
-    const Restaurant(
+    Restaurant(
       id: '5',
       name: 'Naija Flavours',
       address: '34 King Street',
@@ -81,6 +105,7 @@ class MockRestaurants {
       imageUrl: 'https://via.placeholder.com/300x200?text=Naija+Flavours',
       latitude: 53.4808,
       longitude: -2.2426,
+      openingHours: _standardHours,
     ),
   ];
 }

@@ -1,3 +1,36 @@
+// Opening hours for a single day
+class DayHours {
+  final String day;
+  final String? openTime;
+  final String? closeTime;
+  final bool isClosed;
+
+  const DayHours({
+    required this.day,
+    this.openTime,
+    this.closeTime,
+    this.isClosed = false,
+  });
+
+  factory DayHours.fromMap(Map<String, dynamic> map) {
+    return DayHours(
+      day: map['day'] as String,
+      openTime: map['openTime'] as String?,
+      closeTime: map['closeTime'] as String?,
+      isClosed: map['isClosed'] as bool? ?? false,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'day': day,
+      'openTime': openTime,
+      'closeTime': closeTime,
+      'isClosed': isClosed,
+    };
+  }
+}
+
 class Restaurant {
   final String id;
   final String name;
@@ -13,6 +46,7 @@ class Restaurant {
   final String imageUrl;
   final double? latitude;
   final double? longitude;
+  final List<DayHours>? openingHours;
 
   const Restaurant({
     required this.id,
@@ -29,10 +63,18 @@ class Restaurant {
     required this.imageUrl,
     this.latitude,
     this.longitude,
+    this.openingHours,
   });
 
   // Factory method to create from Firestore document
   factory Restaurant.fromFirestore(Map<String, dynamic> data, String id) {
+    List<DayHours>? hours;
+    if (data['openingHours'] != null) {
+      hours = (data['openingHours'] as List)
+          .map((item) => DayHours.fromMap(item as Map<String, dynamic>))
+          .toList();
+    }
+
     return Restaurant(
       id: id,
       name: data['name'] as String? ?? '',
@@ -48,6 +90,7 @@ class Restaurant {
       imageUrl: data['imageUrl'] as String? ?? '',
       latitude: (data['latitude'] as num?)?.toDouble(),
       longitude: (data['longitude'] as num?)?.toDouble(),
+      openingHours: hours,
     );
   }
 
@@ -67,6 +110,7 @@ class Restaurant {
       'imageUrl': imageUrl,
       'latitude': latitude,
       'longitude': longitude,
+      'openingHours': openingHours?.map((h) => h.toMap()).toList(),
     };
   }
 }

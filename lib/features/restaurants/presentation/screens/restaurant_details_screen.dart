@@ -6,6 +6,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../auth/data/providers/auth_provider.dart';
 import '../../data/providers/restaurants_provider.dart';
 import '../widgets/review_card.dart';
+import '../widgets/opening_hours_widget.dart';
 import 'write_review_screen.dart';
 
 class RestaurantDetailsScreen extends ConsumerWidget {
@@ -231,6 +232,20 @@ class RestaurantDetailsScreen extends ConsumerWidget {
                 ),
 
                 const Divider(height: 40, thickness: 1),
+
+                // Opening Hours Section
+                if (restaurant.openingHours != null &&
+                    restaurant.openingHours!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: OpeningHoursWidget(
+                      openingHours: restaurant.openingHours!,
+                    ),
+                  ),
+
+                if (restaurant.openingHours != null &&
+                    restaurant.openingHours!.isNotEmpty)
+                  const Divider(height: 40, thickness: 1),
 
                 // Action Buttons
                 Padding(
