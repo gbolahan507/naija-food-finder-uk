@@ -29,21 +29,35 @@ class AuthRepository {
     required String password,
   }) async {
     try {
+      print('=== AUTH REPOSITORY: Attempting sign in ===');
+      print('Email: $email');
+
       final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      print('Sign in successful, user: ${userCredential.user?.email}');
 
       if (userCredential.user == null) {
         throw Exception('Sign in failed');
       }
 
       // Update last login time
-      await _updateLastLogin(userCredential.user!.uid);
+      try {
+        await _updateLastLogin(userCredential.user!.uid);
+      } catch (e) {
+        print('Warning: Could not update last login: $e');
+        // Don't fail login if Firestore update fails
+      }
 
       return await _getUserData(userCredential.user!);
     } on FirebaseAuthException catch (e) {
+      print('FirebaseAuthException: ${e.code} - ${e.message}');
       throw _handleAuthException(e);
+    } catch (e) {
+      print('Unexpected error during sign in: $e');
+      rethrow;
     }
   }
 
@@ -183,9 +197,11 @@ class AuthRepository {
 
   /// Handle Firebase Auth exceptions
   String _handleAuthException(FirebaseAuthException e) {
+    print('Handling auth exception: ${e.code}');
+
     switch (e.code) {
       case 'user-not-found':
-        return 'No user found with this email';
+        return 'No user found with this email. Please sign up first.';
       case 'wrong-password':
         return 'Wrong password provided';
       case 'email-already-in-use':
@@ -193,15 +209,20 @@ class AuthRepository {
       case 'invalid-email':
         return 'Invalid email address';
       case 'weak-password':
-        return 'Password is too weak';
+        return 'Password is too weak (minimum 6 characters)';
       case 'user-disabled':
         return 'This account has been disabled';
       case 'too-many-requests':
         return 'Too many attempts. Please try again later';
       case 'operation-not-allowed':
-        return 'This sign-in method is not enabled';
+        return 'Email/Password sign-in is not enabled. Please check Firebase Console.';
+      case 'network-request-failed':
+        return 'Network error. Please check your internet connection and try again.';
+      case 'invalid-credential':
+        return 'Invalid credentials. Please check your email and password.';
       default:
-        return 'Authentication error: ${e.message}';
+        // Show the actual error for debugging
+        return 'Authentication error [${e.code}]: ${e.message ?? "Unknown error"}';
     }
   }
 
