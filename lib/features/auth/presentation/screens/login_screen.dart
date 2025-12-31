@@ -50,13 +50,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
         );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (mounted) {
         setState(() => _isLoading = false);
+
+        // Print full error details to console
+        print('=== EMAIL/PASSWORD LOGIN ERROR ===');
+        print('Email: ${_emailController.text.trim()}');
+        print('Error Type: ${e.runtimeType}');
+        print('Error: $e');
+        print('Stack trace: $stackTrace');
+        print('==================================');
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e.toString()),
+            content: Text('Login failed: ${e.toString()}'),
             backgroundColor: AppColors.error,
+            duration: const Duration(seconds: 5),
           ),
         );
       }
@@ -80,13 +90,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
         );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (mounted) {
         setState(() => _isLoading = false);
+
+        // Print full error details to console
+        print('=== GOOGLE SIGN-IN ERROR ===');
+        print('Error Type: ${e.runtimeType}');
+        print('Error: $e');
+        print('Stack trace: $stackTrace');
+        print('============================');
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e.toString()),
+            content: Text('Google sign-in failed: ${e.toString()}'),
             backgroundColor: AppColors.error,
+            duration: const Duration(seconds: 5),
           ),
         );
       }

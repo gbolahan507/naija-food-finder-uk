@@ -55,13 +55,24 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           ),
         );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (mounted) {
         setState(() => _isLoading = false);
+
+        // Print full error details to console
+        print('=== SIGNUP ERROR ===');
+        print('Email: ${_emailController.text.trim()}');
+        print('Name: ${_nameController.text.trim()}');
+        print('Error Type: ${e.runtimeType}');
+        print('Error: $e');
+        print('Stack trace: $stackTrace');
+        print('====================');
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e.toString()),
+            content: Text('Signup failed: ${e.toString()}'),
             backgroundColor: AppColors.error,
+            duration: const Duration(seconds: 5),
           ),
         );
       }
