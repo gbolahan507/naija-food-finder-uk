@@ -7,6 +7,7 @@ import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/restaurants/presentation/screens/restaurants_list_screen.dart';
 import '../../features/restaurants/presentation/screens/map_screen.dart';
 import '../constants/app_colors.dart';
+import '../theme/theme_toggle_widget.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -250,6 +251,27 @@ class ProfileTabScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
+
+                  const SizedBox(height: 32),
+
+                  // Settings Section
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Settings',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 12),
+                        ThemeToggleWidget(),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -336,6 +358,27 @@ class ProfileTabScreen extends ConsumerWidget {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(16),
                     ),
+                  ),
+                ),
+
+                const SizedBox(height: 32),
+
+                // Settings Section
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Settings',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      ThemeToggleWidget(),
+                    ],
                   ),
                 ),
               ],
