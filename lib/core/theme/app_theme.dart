@@ -194,9 +194,213 @@ class AppTheme {
     );
   }
 
-  /// Dark Theme (for future implementation)
+  // Dark Theme Colors
+  static const Color darkBackground = Color(0xFF121212);
+  static const Color darkSurface = Color(0xFF1E1E1E);
+  static const Color darkCard = Color(0xFF2C2C2C);
+  static const Color darkTextPrimary = Color(0xFFE0E0E0);
+  static const Color darkTextSecondary = Color(0xFFB0B0B0);
+
+  /// Dark Theme
   static ThemeData get darkTheme {
-    // TODO: Implement dark theme
-    return lightTheme;
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+
+      // Color Scheme
+      colorScheme: const ColorScheme.dark(
+        primary: nigerianGreen,
+        secondary: accentGold,
+        surface: darkSurface,
+        error: errorRed,
+        onPrimary: nigerianWhite,
+        onSecondary: darkBackground,
+        onSurface: darkTextPrimary,
+      ),
+
+      // Scaffold Background
+      scaffoldBackgroundColor: darkBackground,
+
+      // App Bar Theme
+      appBarTheme: const AppBarTheme(
+        backgroundColor: darkSurface,
+        foregroundColor: darkTextPrimary,
+        elevation: 0,
+        centerTitle: true,
+        titleTextStyle: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: darkTextPrimary,
+        ),
+      ),
+
+      // Card Theme
+      cardTheme: const CardThemeData(
+        elevation: 2,
+        color: darkCard,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
+        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      ),
+
+      // Elevated Button Theme
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: nigerianGreen,
+          foregroundColor: nigerianWhite,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          elevation: 2,
+        ),
+      ),
+
+      // Text Button Theme
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: nigerianGreen,
+        ),
+      ),
+
+      // Input Decoration Theme
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: darkCard,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: nigerianGreen, width: 2),
+        ),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
+
+      // Text Theme
+      textTheme: const TextTheme(
+        // Headings
+        displayLarge: TextStyle(
+          fontSize: 32,
+          fontWeight: FontWeight.bold,
+          color: darkTextPrimary,
+        ),
+        displayMedium: TextStyle(
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
+          color: darkTextPrimary,
+        ),
+        displaySmall: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: darkTextPrimary,
+        ),
+
+        // Titles
+        titleLarge: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: darkTextPrimary,
+        ),
+        titleMedium: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: darkTextPrimary,
+        ),
+        titleSmall: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: darkTextPrimary,
+        ),
+
+        // Body
+        bodyLarge: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.normal,
+          color: darkTextPrimary,
+        ),
+        bodyMedium: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.normal,
+          color: darkTextPrimary,
+        ),
+        bodySmall: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.normal,
+          color: darkTextSecondary,
+        ),
+
+        // Labels
+        labelLarge: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: darkTextPrimary,
+        ),
+        labelMedium: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+          color: darkTextSecondary,
+        ),
+        labelSmall: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w500,
+          color: darkTextSecondary,
+        ),
+      ),
+
+      // Icon Theme
+      iconTheme: const IconThemeData(
+        color: darkTextPrimary,
+        size: 24,
+      ),
+
+      // Bottom Navigation Bar Theme
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: darkSurface,
+        selectedItemColor: nigerianGreen,
+        unselectedItemColor: darkTextSecondary,
+        type: BottomNavigationBarType.fixed,
+        elevation: 8,
+      ),
+
+      // Floating Action Button Theme
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: nigerianGreen,
+        foregroundColor: nigerianWhite,
+        elevation: 4,
+      ),
+
+      // Divider Theme
+      dividerTheme: const DividerThemeData(
+        color: darkCard,
+        thickness: 1,
+        space: 16,
+      ),
+
+      // List Tile Theme
+      listTileTheme: const ListTileThemeData(
+        textColor: darkTextPrimary,
+        iconColor: darkTextPrimary,
+      ),
+
+      // Switch Theme
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return nigerianGreen;
+          }
+          return darkTextSecondary;
+        }),
+        trackColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return nigerianGreen.withValues(alpha: 0.5);
+          }
+          return darkCard;
+        }),
+      ),
+    );
   }
 }
