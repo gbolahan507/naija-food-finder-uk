@@ -4,6 +4,7 @@ import '../../data/providers/restaurants_provider.dart';
 import '../../data/providers/filter_provider.dart';
 import '../../data/models/restaurant_model.dart';
 import '../widgets/restaurant_card.dart';
+import '../widgets/restaurant_card_skeleton.dart';
 import '../widgets/filter_modal.dart';
 import 'restaurant_details_screen.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -350,10 +351,10 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
 
                 return _buildRestaurantList(restaurants);
               },
-              loading: () => const Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.primaryGreen,
-                ),
+              loading: () => ListView.builder(
+                padding: const EdgeInsets.only(top: 8),
+                itemCount: 5,
+                itemBuilder: (context, index) => const RestaurantCardSkeleton(),
               ),
               error: (error, stack) => Center(
                 child: Column(
