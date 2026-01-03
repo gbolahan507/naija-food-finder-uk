@@ -5,6 +5,7 @@ import '../models/restaurant_model.dart';
 import '../models/review_model.dart';
 import '../repositories/restaurants_repository.dart';
 import '../repositories/reviews_repository.dart';
+import 'filter_provider.dart';
 
 // Repository provider
 final restaurantsRepositoryProvider = Provider<RestaurantsRepository>((ref) {
@@ -20,10 +21,52 @@ final restaurantsProvider = StreamProvider<List<Restaurant>>((ref) {
 // Search provider
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
-final filteredRestaurantsProvider = StreamProvider<List<Restaurant>>((ref) {
+final filteredRestaurantsProvider = StreamProvider<List<Restaurant>>((ref) async* {
   final repository = ref.watch(restaurantsRepositoryProvider);
   final searchQuery = ref.watch(searchQueryProvider);
-  return repository.searchRestaurants(searchQuery);
+  final filter = ref.watch(restaurantFilterProvider);
+
+  // Get restaurants from repository with search
+  await for (final restaurants in repository.searchRestaurants(searchQuery)) {
+    // Apply advanced filters
+    var filtered = restaurants;
+
+    // Filter by distance
+    if (filter.maxDistance < 10.0) {
+      filtered = filtered
+          .where((r) => r.distance <= filter.maxDistance)
+          .toList();
+    }
+
+    // Filter by cuisines
+    if (filter.selectedCuisines.isNotEmpty) {
+      filtered = filtered.where((r) {
+        return filter.selectedCuisines
+            .any((cuisine) => r.cuisineTypes.contains(cuisine));
+      }).toList();
+    }
+
+    // Filter by open status
+    if (filter.isOpenNow != null) {
+      if (filter.isOpenNow!) {
+        filtered = filtered.where((r) => r.isOpenNow).toList();
+      } else {
+        filtered = filtered.where((r) => !r.isOpenNow).toList();
+      }
+    }
+
+    // Filter by delivery
+    if (filter.hasDelivery) {
+      filtered = filtered.where((r) => r.hasDelivery).toList();
+    }
+
+    // Filter by takeaway
+    if (filter.hasTakeaway) {
+      filtered = filtered.where((r) => r.hasTakeaway).toList();
+    }
+
+    yield filtered;
+  }
 });
 
 // Favorites repository provider

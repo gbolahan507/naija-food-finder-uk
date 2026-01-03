@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/providers/restaurants_provider.dart';
+import '../../data/providers/filter_provider.dart';
 import '../../data/models/restaurant_model.dart';
 import '../widgets/restaurant_card.dart';
+import '../widgets/filter_modal.dart';
 import 'restaurant_details_screen.dart';
 import '../../../../core/constants/app_colors.dart';
 
@@ -89,6 +91,61 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
           ],
         ),
         actions: [
+          // Filter Button with Badge
+          Consumer(
+            builder: (context, ref, child) {
+              final filter = ref.watch(restaurantFilterProvider);
+              final activeCount = filter.activeFilterCount;
+
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.filter_list),
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => DraggableScrollableSheet(
+                          initialChildSize: 0.9,
+                          minChildSize: 0.5,
+                          maxChildSize: 0.95,
+                          builder: (context, scrollController) =>
+                              const FilterModal(),
+                        ),
+                      );
+                    },
+                  ),
+                  if (activeCount > 0)
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: AppColors.error,
+                          shape: BoxShape.circle,
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 18,
+                          minHeight: 18,
+                        ),
+                        child: Text(
+                          '$activeCount',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
           PopupMenuButton<String>(
             icon: const Icon(Icons.sort),
             onSelected: (value) {
