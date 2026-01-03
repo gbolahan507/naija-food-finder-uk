@@ -6,6 +6,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../auth/data/providers/auth_provider.dart';
 import '../../data/providers/restaurants_provider.dart';
 import '../widgets/review_card.dart';
+import '../widgets/review_card_skeleton.dart';
 import '../widgets/opening_hours_widget.dart';
 import 'write_review_screen.dart';
 
@@ -462,12 +463,10 @@ class RestaurantDetailsScreen extends ConsumerWidget {
                             }).toList(),
                           );
                         },
-                        loading: () => const Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(32),
-                            child: CircularProgressIndicator(
-                              color: AppColors.primaryGreen,
-                            ),
+                        loading: () => Column(
+                          children: List.generate(
+                            3,
+                            (index) => const ReviewCardSkeleton(),
                           ),
                         ),
                         error: (error, stack) => Center(
