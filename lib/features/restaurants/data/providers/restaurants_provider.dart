@@ -21,7 +21,8 @@ final restaurantsProvider = StreamProvider<List<Restaurant>>((ref) {
 // Search provider
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
-final filteredRestaurantsProvider = StreamProvider<List<Restaurant>>((ref) async* {
+final filteredRestaurantsProvider =
+    StreamProvider<List<Restaurant>>((ref) async* {
   final repository = ref.watch(restaurantsRepositoryProvider);
   final searchQuery = ref.watch(searchQueryProvider);
   final filter = ref.watch(restaurantFilterProvider);
@@ -33,9 +34,8 @@ final filteredRestaurantsProvider = StreamProvider<List<Restaurant>>((ref) async
 
     // Filter by distance
     if (filter.maxDistance < 10.0) {
-      filtered = filtered
-          .where((r) => r.distance <= filter.maxDistance)
-          .toList();
+      filtered =
+          filtered.where((r) => r.distance <= filter.maxDistance).toList();
     }
 
     // Filter by cuisines

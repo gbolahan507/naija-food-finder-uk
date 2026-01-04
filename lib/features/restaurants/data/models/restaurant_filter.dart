@@ -4,7 +4,8 @@ import 'package:equatable/equatable.dart';
 class RestaurantFilter extends Equatable {
   final double maxDistance; // in miles
   final List<String> selectedCuisines;
-  final bool? isOpenNow; // null = don't filter, true = open only, false = closed only
+  final bool?
+      isOpenNow; // null = don't filter, true = open only, false = closed only
   final bool hasDelivery;
   final bool hasTakeaway;
 

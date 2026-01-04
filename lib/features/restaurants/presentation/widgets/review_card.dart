@@ -130,7 +130,8 @@ class ReviewCard extends ConsumerWidget {
                         value: 'delete',
                         child: Row(
                           children: [
-                            Icon(Icons.delete, size: 18, color: AppColors.error),
+                            Icon(Icons.delete,
+                                size: 18, color: AppColors.error),
                             SizedBox(width: 8),
                             Text(
                               'Delete',

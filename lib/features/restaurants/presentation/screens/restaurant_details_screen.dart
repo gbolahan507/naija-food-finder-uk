@@ -439,8 +439,7 @@ class RestaurantDetailsScreen extends ConsumerWidget {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           const SnackBar(
-                                            content:
-                                                Text('Review deleted'),
+                                            content: Text('Review deleted'),
                                             backgroundColor: AppColors.success,
                                           ),
                                         );
