@@ -91,7 +91,9 @@ class _OpeningHoursWidgetState extends State<OpeningHoursWidget> {
               child: Row(
                 children: [
                   Icon(
-                    today?.isClosed == true ? Icons.schedule_outlined : Icons.access_time,
+                    today?.isClosed == true
+                        ? Icons.schedule_outlined
+                        : Icons.access_time,
                     color: today?.isClosed == true
                         ? AppColors.error
                         : AppColors.primaryGreen,
@@ -126,7 +128,9 @@ class _OpeningHoursWidgetState extends State<OpeningHoursWidget> {
                     ),
                   ),
                   Icon(
-                    _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    _isExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
                     color: AppColors.mediumGrey,
                   ),
                 ],
@@ -151,8 +155,11 @@ class _OpeningHoursWidgetState extends State<OpeningHoursWidget> {
                             dayHours.day,
                             style: TextStyle(
                               fontSize: 14,
-                              fontWeight: isToday ? FontWeight.w600 : FontWeight.normal,
-                              color: isToday ? AppColors.primaryGreen : AppColors.darkText,
+                              fontWeight:
+                                  isToday ? FontWeight.w600 : FontWeight.normal,
+                              color: isToday
+                                  ? AppColors.primaryGreen
+                                  : AppColors.darkText,
                             ),
                           ),
                         ),
@@ -164,10 +171,13 @@ class _OpeningHoursWidgetState extends State<OpeningHoursWidget> {
                                 : '${dayHours.openTime} - ${dayHours.closeTime}',
                             style: TextStyle(
                               fontSize: 14,
-                              fontWeight: isToday ? FontWeight.w600 : FontWeight.normal,
+                              fontWeight:
+                                  isToday ? FontWeight.w600 : FontWeight.normal,
                               color: dayHours.isClosed
                                   ? AppColors.error
-                                  : (isToday ? AppColors.primaryGreen : AppColors.lightText),
+                                  : (isToday
+                                      ? AppColors.primaryGreen
+                                      : AppColors.lightText),
                             ),
                             textAlign: TextAlign.right,
                           ),

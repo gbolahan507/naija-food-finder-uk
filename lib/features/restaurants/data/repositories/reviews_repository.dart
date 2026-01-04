@@ -68,7 +68,8 @@ class ReviewsRepository {
         .snapshots()
         .map((snapshot) {
       if (snapshot.docs.isEmpty) return null;
-      return Review.fromFirestore(snapshot.docs.first.data(), snapshot.docs.first.id);
+      return Review.fromFirestore(
+          snapshot.docs.first.data(), snapshot.docs.first.id);
     });
   }
 
