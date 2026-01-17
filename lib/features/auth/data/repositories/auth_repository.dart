@@ -53,10 +53,24 @@ class AuthRepository {
 
       return await _getUserData(userCredential.user!);
     } on FirebaseAuthException catch (e) {
-      print('FirebaseAuthException: ${e.code} - ${e.message}');
+      print('=== FIREBASE AUTH EXCEPTION (DETAILED) ===');
+      print('Error Code: ${e.code}');
+      print('Error Message: ${e.message}');
+      print('Email: ${e.email}');
+      print('Credential: ${e.credential}');
+      print('Phone Number: ${e.phoneNumber}');
+      print('Tenant ID: ${e.tenantId}');
+      print('Plugin: ${e.plugin}');
+      print('Stack Trace: ${e.stackTrace}');
+      print('toString(): ${e.toString()}');
+      print('==========================================');
       throw _handleAuthException(e);
-    } catch (e) {
-      print('Unexpected error during sign in: $e');
+    } catch (e, stackTrace) {
+      print('=== UNEXPECTED ERROR (DETAILED) ===');
+      print('Error Type: ${e.runtimeType}');
+      print('Error: $e');
+      print('Stack Trace: $stackTrace');
+      print('====================================');
       rethrow;
     }
   }
@@ -68,10 +82,16 @@ class AuthRepository {
     String? displayName,
   }) async {
     try {
+      print('=== AUTH REPOSITORY: Attempting sign up ===');
+      print('Email: $email');
+      print('Display Name: $displayName');
+
       final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      print('Sign up successful! User: ${userCredential.user?.email}');
 
       if (userCredential.user == null) {
         throw Exception('Sign up failed');
@@ -79,18 +99,43 @@ class AuthRepository {
 
       // Update display name if provided
       if (displayName != null) {
+        print('Updating display name...');
         await userCredential.user!.updateDisplayName(displayName);
+        print('Display name updated');
       }
 
       // Create user document in Firestore
+      print('Creating user document in Firestore...');
       await _createUserDocument(
         userCredential.user!,
         displayName: displayName,
       );
+      print('User document created successfully');
 
-      return await _getUserData(userCredential.user!);
+      print('Fetching user data...');
+      final userData = await _getUserData(userCredential.user!);
+      print('Sign up complete!');
+      return userData;
     } on FirebaseAuthException catch (e) {
+      print('=== FIREBASE AUTH EXCEPTION (DETAILED) - SIGNUP ===');
+      print('Error Code: ${e.code}');
+      print('Error Message: ${e.message}');
+      print('Email: ${e.email}');
+      print('Credential: ${e.credential}');
+      print('Phone Number: ${e.phoneNumber}');
+      print('Tenant ID: ${e.tenantId}');
+      print('Plugin: ${e.plugin}');
+      print('Stack Trace: ${e.stackTrace}');
+      print('toString(): ${e.toString()}');
+      print('===================================================');
       throw _handleAuthException(e);
+    } catch (e, stackTrace) {
+      print('=== UNEXPECTED ERROR (DETAILED) - SIGNUP ===');
+      print('Error Type: ${e.runtimeType}');
+      print('Error: $e');
+      print('Stack Trace: $stackTrace');
+      print('=============================================');
+      rethrow;
     }
   }
 
