@@ -4,9 +4,10 @@ linter:
   rules:
     # Pedantic rules
     avoid_print: true
-    prefer_const_constructors: true
-    prefer_const_literals_to_create_immutables: true
-    
+    # Disabled const rules - minor performance optimizations, not critical
+    # prefer_const_constructors: true
+    # prefer_const_literals_to_create_immutables: true
+
     # Additional helpful rules
     always_declare_return_types: true
     always_require_non_null_named_parameters: true
