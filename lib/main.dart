@@ -19,7 +19,8 @@ void main() async {
     debugPrint('Firebase initialized successfully!');
     debugPrint('Firebase App Name: ${Firebase.app().name}');
     debugPrint('Firebase Project ID: ${Firebase.app().options.projectId}');
-    debugPrint('Firebase Storage Bucket: ${Firebase.app().options.storageBucket}');
+    debugPrint(
+        'Firebase Storage Bucket: ${Firebase.app().options.storageBucket}');
   } catch (e, stackTrace) {
     debugPrint('Firebase initialization FAILED!');
     debugPrint('Error: $e');
