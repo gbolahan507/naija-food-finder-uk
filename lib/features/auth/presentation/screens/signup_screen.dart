@@ -61,13 +61,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         setState(() => _isLoading = false);
 
         // Print full error details to console
-        print('=== SIGNUP ERROR ===');
-        print('Email: ${_emailController.text.trim()}');
-        print('Name: ${_nameController.text.trim()}');
-        print('Error Type: ${e.runtimeType}');
-        print('Error: $e');
-        print('Stack trace: $stackTrace');
-        print('====================');
+        debugPrint('=== SIGNUP ERROR ===');
+        debugPrint('Email: ${_emailController.text.trim()}');
+        debugPrint('Name: ${_nameController.text.trim()}');
+        debugPrint('Error Type: ${e.runtimeType}');
+        debugPrint('Error: $e');
+        debugPrint('Stack trace: $stackTrace');
+        debugPrint('====================');
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

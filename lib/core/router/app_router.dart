@@ -18,14 +18,14 @@ class AuthGate extends ConsumerWidget {
     return authState.when(
       data: (user) {
         // Debug: Print auth state
-        print('=== AUTH STATE ===');
-        print('User signed in: ${user != null}');
+        debugPrint('=== AUTH STATE ===');
+        debugPrint('User signed in: ${user != null}');
         if (user != null) {
-          print('User ID: ${user.uid}');
-          print('Email: ${user.email}');
-          print('Display Name: ${user.displayName}');
+          debugPrint('User ID: ${user.uid}');
+          debugPrint('Email: ${user.email}');
+          debugPrint('Display Name: ${user.displayName}');
         }
-        print('==================');
+        debugPrint('==================');
 
         // Check authentication - redirect to login if not authenticated
         if (user == null) {
@@ -41,9 +41,9 @@ class AuthGate extends ConsumerWidget {
         ),
       ),
       error: (error, stack) {
-        print('=== AUTH ERROR ===');
-        print('Error: $error');
-        print('==================');
+        debugPrint('=== AUTH ERROR ===');
+        debugPrint('Error: $error');
+        debugPrint('==================');
         // On error, show login screen
         return const LoginScreen();
       },
