@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:naija_food_finder_uk/features/restaurants/data/providers/restaurants_provider.dart';
 import 'package:naija_food_finder_uk/features/restaurants/presentation/screens/favorites_screen.dart';
 import '../../features/auth/data/providers/auth_provider.dart';
@@ -9,38 +10,32 @@ import '../../features/restaurants/presentation/screens/map_screen.dart';
 import '../constants/app_colors.dart';
 import '../theme/theme_toggle_widget.dart';
 
-class MainNavigation extends StatefulWidget {
+// Provider to persist selected navigation index across hot reloads
+final selectedNavigationIndexProvider = StateProvider<int>((ref) => 0);
+
+class MainNavigation extends ConsumerWidget {
   const MainNavigation({super.key});
 
-  @override
-  State<MainNavigation> createState() => _MainNavigationState();
-}
-
-class _MainNavigationState extends State<MainNavigation> {
-  int _selectedIndex = 0;
-
   // Placeholder screens for other tabs
-  final List<Widget> _screens = [
-    const RestaurantsListScreen(),
-    const SearchTabScreen(),
-    const MapScreen(),
-    const ProfileTabScreen(),
+  static const List<Widget> _screens = [
+    RestaurantsListScreen(),
+    SearchTabScreen(),
+    MapScreen(),
+    ProfileTabScreen(),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedIndex = ref.watch(selectedNavigationIndexProvider);
+
     return Scaffold(
-      body: _screens[_selectedIndex],
+      body: _screens[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        currentIndex: selectedIndex,
+        onTap: (index) {
+          ref.read(selectedNavigationIndexProvider.notifier).state = index;
+        },
         selectedItemColor: AppColors.primaryGreen,
         unselectedItemColor: AppColors.mediumGrey,
         selectedFontSize: 12,
