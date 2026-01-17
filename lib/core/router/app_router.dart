@@ -27,8 +27,12 @@ class AuthGate extends ConsumerWidget {
         }
         print('==================');
 
-        // Allow browsing without auth
-        // Users can view restaurants, but need to sign in to review/favorite
+        // Check authentication - redirect to login if not authenticated
+        if (user == null) {
+          return const LoginScreen();
+        }
+
+        // User is authenticated, show main navigation
         return const MainNavigation();
       },
       loading: () => const Scaffold(
@@ -40,7 +44,8 @@ class AuthGate extends ConsumerWidget {
         print('=== AUTH ERROR ===');
         print('Error: $error');
         print('==================');
-        return const MainNavigation();
+        // On error, show login screen
+        return const LoginScreen();
       },
     );
   }
