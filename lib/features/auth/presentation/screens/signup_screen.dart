@@ -44,9 +44,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       );
 
       if (mounted) {
-        // Pop twice: signup screen and login screen
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
+        setState(() => _isLoading = false);
+        // Sign up successful - close modal screens using popUntil
+        // This safely removes signup and login screens from stack
+        Navigator.of(context).popUntil((route) => route.isFirst);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Account created successfully!'),
@@ -87,8 +88,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       await authController.signInWithGoogle();
 
       if (mounted) {
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
+        setState(() => _isLoading = false);
+        // Sign in successful - close modal screens using popUntil
+        Navigator.of(context).popUntil((route) => route.isFirst);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Signed in successfully with Google!'),

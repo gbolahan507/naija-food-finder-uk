@@ -40,8 +40,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
 
       if (mounted) {
-        // Successfully signed in, pop back to previous screen
-        Navigator.of(context).pop();
+        setState(() => _isLoading = false);
+        // Sign in successful - AuthGate will detect auth change and show MainNavigation
+        // LoginScreen is shown by AuthGate, not pushed, so no need to pop
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Signed in successfully!'),
@@ -81,7 +82,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       await authController.signInWithGoogle();
 
       if (mounted) {
-        Navigator.of(context).pop();
+        setState(() => _isLoading = false);
+        // Sign in successful - AuthGate will detect auth change and show MainNavigation
+        // LoginScreen is shown by AuthGate, not pushed, so no need to pop
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Signed in successfully with Google!'),
