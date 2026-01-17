@@ -9,23 +9,23 @@ import 'core/theme/theme_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  print('=== FIREBASE INITIALIZATION ===');
-  print('Platform: ${DefaultFirebaseOptions.currentPlatform}');
+  debugPrint('=== FIREBASE INITIALIZATION ===');
+  debugPrint('Platform: ${DefaultFirebaseOptions.currentPlatform}');
 
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    print('Firebase initialized successfully!');
-    print('Firebase App Name: ${Firebase.app().name}');
-    print('Firebase Project ID: ${Firebase.app().options.projectId}');
-    print('Firebase Storage Bucket: ${Firebase.app().options.storageBucket}');
+    debugPrint('Firebase initialized successfully!');
+    debugPrint('Firebase App Name: ${Firebase.app().name}');
+    debugPrint('Firebase Project ID: ${Firebase.app().options.projectId}');
+    debugPrint('Firebase Storage Bucket: ${Firebase.app().options.storageBucket}');
   } catch (e, stackTrace) {
-    print('Firebase initialization FAILED!');
-    print('Error: $e');
-    print('Stack trace: $stackTrace');
+    debugPrint('Firebase initialization FAILED!');
+    debugPrint('Error: $e');
+    debugPrint('Stack trace: $stackTrace');
   }
-  print('===============================');
+  debugPrint('===============================');
 
   runApp(const ProviderScope(child: MyApp()));
 }

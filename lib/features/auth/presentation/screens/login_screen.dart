@@ -56,12 +56,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         setState(() => _isLoading = false);
 
         // Print full error details to console
-        print('=== EMAIL/PASSWORD LOGIN ERROR ===');
-        print('Email: ${_emailController.text.trim()}');
-        print('Error Type: ${e.runtimeType}');
-        print('Error: $e');
-        print('Stack trace: $stackTrace');
-        print('==================================');
+        debugPrint('=== EMAIL/PASSWORD LOGIN ERROR ===');
+        debugPrint('Email: ${_emailController.text.trim()}');
+        debugPrint('Error Type: ${e.runtimeType}');
+        debugPrint('Error: $e');
+        debugPrint('Stack trace: $stackTrace');
+        debugPrint('==================================');
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -98,11 +98,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         setState(() => _isLoading = false);
 
         // Print full error details to console
-        print('=== GOOGLE SIGN-IN ERROR ===');
-        print('Error Type: ${e.runtimeType}');
-        print('Error: $e');
-        print('Stack trace: $stackTrace');
-        print('============================');
+        debugPrint('=== GOOGLE SIGN-IN ERROR ===');
+        debugPrint('Error Type: ${e.runtimeType}');
+        debugPrint('Error: $e');
+        debugPrint('Stack trace: $stackTrace');
+        debugPrint('============================');
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
