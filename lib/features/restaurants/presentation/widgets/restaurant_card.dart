@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naija_food_finder_uk/features/restaurants/data/providers/restaurants_provider.dart';
@@ -83,11 +84,16 @@ class RestaurantCard extends ConsumerWidget {
                     data: (isFavorite) {
                       return GestureDetector(
                         onTap: () async {
+                          debugPrint('❤️ Favorite button tapped for: ${restaurant.id}');
+                          debugPrint('❤️ Current favorite state: $isFavorite');
+
                           final repository =
                               ref.read(favoritesRepositoryProvider);
 
                           try {
+                            debugPrint('🔄 Calling toggleFavorite...');
                             await repository.toggleFavorite(restaurant.id, isFavorite);
+                            debugPrint('✅ toggleFavorite completed successfully');
 
                             // Show feedback
                             if (context.mounted) {
@@ -104,14 +110,15 @@ class RestaurantCard extends ConsumerWidget {
                               );
                             }
                           } catch (e) {
+                            debugPrint('❌ Error in toggleFavorite: $e');
                             // Handle authentication error
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
+                                SnackBar(
                                   content: Text(
-                                    'Please log in to save favorites',
+                                    'Please log in to save favorites: $e',
                                   ),
-                                  duration: Duration(seconds: 2),
+                                  duration: const Duration(seconds: 2),
                                   backgroundColor: AppColors.error,
                                 ),
                               );
