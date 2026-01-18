@@ -109,16 +109,17 @@ class RestaurantCard extends ConsumerWidget {
                                 ),
                               );
                             }
-                          } catch (e) {
+                          } catch (e, stackTrace) {
                             debugPrint('❌ Error in toggleFavorite: $e');
+                            debugPrint('❌ Stack trace: $stackTrace');
                             // Handle authentication error
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    'Please log in to save favorites: $e',
+                                    'Error: ${e.toString()}',
                                   ),
-                                  duration: const Duration(seconds: 2),
+                                  duration: const Duration(seconds: 3),
                                   backgroundColor: AppColors.error,
                                 ),
                               );
