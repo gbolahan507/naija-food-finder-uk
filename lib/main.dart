@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
 import 'core/utils/import_data.dart';
+import 'core/utils/cleanup_firestore.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +24,10 @@ void main() async {
     debugPrint(
         'Firebase Storage Bucket: ${Firebase.app().options.storageBucket}');
 
-    // 🔥 IMPORT REAL RESTAURANTS - RUN ONCE THEN COMMENT OUT! 🔥
+    // 🔥 CLEANUP & IMPORT - RUN ONCE THEN COMMENT OUT! 🔥
+    // Step 1: Delete old mock data
+    await cleanupOldRestaurants();
+    // Step 2: Import 50 new restaurants
     await addAll50Restaurants();
   } catch (e, stackTrace) {
     debugPrint('Firebase initialization FAILED!');
