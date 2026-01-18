@@ -47,6 +47,7 @@ class Restaurant {
   final double? latitude;
   final double? longitude;
   final List<DayHours>? openingHours;
+  final String? phone;
 
   const Restaurant({
     required this.id,
@@ -64,6 +65,7 @@ class Restaurant {
     this.latitude,
     this.longitude,
     this.openingHours,
+    this.phone,
   });
 
   // Factory method to create from Firestore document
@@ -91,6 +93,7 @@ class Restaurant {
       latitude: (data['latitude'] as num?)?.toDouble(),
       longitude: (data['longitude'] as num?)?.toDouble(),
       openingHours: hours,
+      phone: data['phone'] as String?,
     );
   }
 
@@ -111,6 +114,7 @@ class Restaurant {
       'latitude': latitude,
       'longitude': longitude,
       'openingHours': openingHours?.map((h) => h.toMap()).toList(),
+      'phone': phone,
     };
   }
 }

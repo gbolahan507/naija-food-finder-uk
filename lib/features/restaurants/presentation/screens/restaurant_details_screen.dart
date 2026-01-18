@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../data/models/restaurant_model.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../auth/data/providers/auth_provider.dart';
@@ -17,6 +18,36 @@ class RestaurantDetailsScreen extends ConsumerWidget {
     super.key,
     required this.restaurant,
   });
+
+  Future<void> _makePhoneCall(String? phoneNumber) async {
+    if (phoneNumber == null || phoneNumber.isEmpty) {
+      return;
+    }
+
+    final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
+    if (await canLaunchUrl(phoneUri)) {
+      await launchUrl(phoneUri);
+    } else {
+      debugPrint('Could not launch $phoneUri');
+    }
+  }
+
+  Future<void> _openDirections(double? latitude, double? longitude) async {
+    if (latitude == null || longitude == null) {
+      return;
+    }
+
+    // Google Maps URL scheme
+    final Uri mapsUri = Uri.parse(
+      'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude',
+    );
+
+    if (await canLaunchUrl(mapsUri)) {
+      await launchUrl(mapsUri, mode: LaunchMode.externalApplication);
+    } else {
+      debugPrint('Could not launch maps');
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -256,14 +287,15 @@ class RestaurantDetailsScreen extends ConsumerWidget {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
-                          onPressed: () {
-                            // TODO: Implement call functionality
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Call restaurant')),
-                            );
-                          },
+                          onPressed: restaurant.phone != null
+                              ? () => _makePhoneCall(restaurant.phone)
+                              : null,
                           icon: const Icon(Icons.phone),
-                          label: const Text('Call Restaurant'),
+                          label: Text(
+                            restaurant.phone != null
+                                ? 'Call Restaurant'
+                                : 'No Phone Number',
+                          ),
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.all(16),
                           ),
@@ -273,14 +305,20 @@ class RestaurantDetailsScreen extends ConsumerWidget {
                       SizedBox(
                         width: double.infinity,
                         child: OutlinedButton.icon(
-                          onPressed: () {
-                            // TODO: Implement directions
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Get directions')),
-                            );
-                          },
+                          onPressed: restaurant.latitude != null &&
+                                  restaurant.longitude != null
+                              ? () => _openDirections(
+                                    restaurant.latitude,
+                                    restaurant.longitude,
+                                  )
+                              : null,
                           icon: const Icon(Icons.directions),
-                          label: const Text('Get Directions'),
+                          label: Text(
+                            restaurant.latitude != null &&
+                                    restaurant.longitude != null
+                                ? 'Get Directions'
+                                : 'No Location Available',
+                          ),
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.all(16),
                             side: const BorderSide(

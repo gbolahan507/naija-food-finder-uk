@@ -38,6 +38,7 @@ class MockRestaurants {
       latitude: 51.5074,
       longitude: -0.1278,
       openingHours: _standardHours,
+      phone: '+44 20 7946 0958',
     ),
     Restaurant(
       id: '2',
@@ -55,6 +56,7 @@ class MockRestaurants {
       latitude: 51.5155,
       longitude: -0.1410,
       openingHours: _standardHours,
+      phone: '+44 20 7946 0123',
     ),
     Restaurant(
       id: '3',
@@ -72,6 +74,7 @@ class MockRestaurants {
       latitude: 51.5152,
       longitude: -0.1419,
       openingHours: _lateNightHours, // Late night hours, closed Sunday
+      phone: '+44 20 7946 0456',
     ),
     Restaurant(
       id: '4',
@@ -89,6 +92,7 @@ class MockRestaurants {
       latitude: 51.5392,
       longitude: -0.1426,
       openingHours: _standardHours,
+      phone: '+44 20 7946 0789',
     ),
     Restaurant(
       id: '5',
@@ -106,6 +110,7 @@ class MockRestaurants {
       latitude: 53.4808,
       longitude: -2.2426,
       openingHours: _standardHours,
+      phone: '+44 161 839 5678',
     ),
   ];
 }
