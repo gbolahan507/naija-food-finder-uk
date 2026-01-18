@@ -381,6 +381,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                                   onPressed: () {
                                     setState(() {
                                       _searchController.clear();
+                                      _showSearchResults = false;
                                       ref
                                           .read(searchQueryProvider.notifier)
                                           .state = '';
