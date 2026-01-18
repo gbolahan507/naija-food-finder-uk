@@ -5,8 +5,8 @@ import 'package:naija_food_finder_uk/core/router/app_router.dart';
 import 'firebase_options.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
-import 'core/utils/import_data.dart';
-import 'core/utils/cleanup_firestore.dart';
+// import 'core/utils/import_data.dart';
+// import 'core/utils/cleanup_firestore.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
