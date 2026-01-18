@@ -210,6 +210,48 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     });
   }
 
+  Future<void> _fitMapToMarkers() async {
+    if (_mapController == null || _markers.isEmpty) return;
+
+    if (_markers.length == 1) {
+      // If only one marker, center on it with good zoom
+      final marker = _markers.first;
+      _mapController!.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: marker.position,
+            zoom: 16.0,
+          ),
+        ),
+      );
+    } else {
+      // Multiple markers - fit bounds
+      double minLat = _markers.first.position.latitude;
+      double maxLat = _markers.first.position.latitude;
+      double minLng = _markers.first.position.longitude;
+      double maxLng = _markers.first.position.longitude;
+
+      for (final marker in _markers) {
+        final lat = marker.position.latitude;
+        final lng = marker.position.longitude;
+
+        if (lat < minLat) minLat = lat;
+        if (lat > maxLat) maxLat = lat;
+        if (lng < minLng) minLng = lng;
+        if (lng > maxLng) maxLng = lng;
+      }
+
+      final bounds = LatLngBounds(
+        southwest: LatLng(minLat, minLng),
+        northeast: LatLng(maxLat, maxLng),
+      );
+
+      _mapController!.animateCamera(
+        CameraUpdate.newLatLngBounds(bounds, 80),
+      );
+    }
+  }
+
   @override
   void dispose() {
     _debounce?.cancel();
@@ -332,41 +374,50 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    // Restaurant count badge
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryGreen,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.1),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.restaurant,
-                            color: Colors.white,
-                            size: 16,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            '${restaurants.length} restaurants',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                    // Restaurant count badge - tappable to fit markers
+                    GestureDetector(
+                      onTap: _fitMapToMarkers,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryGreen,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.restaurant,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              '${restaurants.length} restaurants',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            const Icon(
+                              Icons.center_focus_strong,
+                              color: Colors.white,
+                              size: 14,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
