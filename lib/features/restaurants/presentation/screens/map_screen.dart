@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../data/models/restaurant_model.dart';
 import '../../data/providers/restaurants_provider.dart';
@@ -18,6 +19,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   // Default location: London, UK
   static const LatLng _defaultLocation = LatLng(51.5074, -0.1278);
+  LatLng? _currentLocation;
 
   final Set<Marker> _markers = {};
   bool _isLoading = true;
@@ -27,7 +29,63 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   @override
   void initState() {
     super.initState();
-    // Markers will be loaded when restaurants data is available
+    _getCurrentLocation();
+  }
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      debugPrint('=== REQUESTING LOCATION PERMISSION ===');
+
+      // Check if location services are enabled
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        debugPrint('Location services are disabled');
+        return;
+      }
+
+      // Check location permission
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          debugPrint('Location permission denied');
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        debugPrint('Location permission denied forever');
+        return;
+      }
+
+      // Get current position
+      debugPrint('Getting current position...');
+      Position position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
+      );
+
+      debugPrint('Current location: ${position.latitude}, ${position.longitude}');
+
+      setState(() {
+        _currentLocation = LatLng(position.latitude, position.longitude);
+      });
+
+      // Move camera to current location
+      if (_mapController != null) {
+        _mapController!.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: _currentLocation!,
+              zoom: 14.0,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error getting location: $e');
+    }
   }
 
   void _loadRestaurantMarkers(List<Restaurant> restaurants) {
@@ -68,13 +126,6 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       _markers.addAll(markers);
       _isLoading = false;
     });
-
-    // Auto-recenter when markers change
-    if (_markers.isNotEmpty && _mapController != null) {
-      Future.delayed(const Duration(milliseconds: 300), () {
-        _recenterMap();
-      });
-    }
   }
 
   void _onMarkerTapped(String restaurantId) {
@@ -95,47 +146,57 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     _mapController = controller;
     debugPrint('=== MAP CREATED ===');
     debugPrint('Map controller initialized successfully');
+
+    // Move to current location if available
+    if (_currentLocation != null) {
+      _mapController!.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: _currentLocation!,
+            zoom: 14.0,
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> _recenterMap() async {
     if (_mapController != null) {
-      // If we have markers, fit them all in view
-      if (_markers.isNotEmpty) {
-        final bounds = _calculateBounds();
-        _mapController!.animateCamera(
-          CameraUpdate.newLatLngBounds(bounds, 50),
-        );
-      } else {
-        // Otherwise, center on default location
+      // If we have current location, center on it
+      if (_currentLocation != null) {
         _mapController!.animateCamera(
           CameraUpdate.newCameraPosition(
-            const CameraPosition(
-              target: _defaultLocation,
-              zoom: 12.0,
+            CameraPosition(
+              target: _currentLocation!,
+              zoom: 14.0,
             ),
           ),
         );
+      } else {
+        // Otherwise, try to get current location
+        await _getCurrentLocation();
+        if (_currentLocation != null) {
+          _mapController!.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: _currentLocation!,
+                zoom: 14.0,
+              ),
+            ),
+          );
+        } else {
+          // Fall back to default location
+          _mapController!.animateCamera(
+            CameraUpdate.newCameraPosition(
+              const CameraPosition(
+                target: _defaultLocation,
+                zoom: 12.0,
+              ),
+            ),
+          );
+        }
       }
     }
-  }
-
-  LatLngBounds _calculateBounds() {
-    double? minLat, maxLat, minLng, maxLng;
-
-    for (final marker in _markers) {
-      final lat = marker.position.latitude;
-      final lng = marker.position.longitude;
-
-      if (minLat == null || lat < minLat) minLat = lat;
-      if (maxLat == null || lat > maxLat) maxLat = lat;
-      if (minLng == null || lng < minLng) minLng = lng;
-      if (maxLng == null || lng > maxLng) maxLng = lng;
-    }
-
-    return LatLngBounds(
-      southwest: LatLng(minLat ?? 0, minLng ?? 0),
-      northeast: LatLng(maxLat ?? 0, maxLng ?? 0),
-    );
   }
 
   @override
@@ -177,9 +238,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             children: [
               GoogleMap(
                 onMapCreated: _onMapCreated,
-                initialCameraPosition: const CameraPosition(
-                  target: _defaultLocation,
-                  zoom: 12.0,
+                initialCameraPosition: CameraPosition(
+                  target: _currentLocation ?? _defaultLocation,
+                  zoom: 14.0,
                 ),
                 markers: _markers,
                 myLocationEnabled: true,
