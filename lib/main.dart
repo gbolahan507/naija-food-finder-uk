@@ -5,6 +5,7 @@ import 'package:naija_food_finder_uk/core/router/app_router.dart';
 import 'firebase_options.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
+import 'core/utils/import_data.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,9 @@ void main() async {
     debugPrint('Firebase Project ID: ${Firebase.app().options.projectId}');
     debugPrint(
         'Firebase Storage Bucket: ${Firebase.app().options.storageBucket}');
+
+    // 🔥 IMPORT REAL RESTAURANTS - RUN ONCE THEN COMMENT OUT! 🔥
+    await addAll50Restaurants();
   } catch (e, stackTrace) {
     debugPrint('Firebase initialization FAILED!');
     debugPrint('Error: $e');
