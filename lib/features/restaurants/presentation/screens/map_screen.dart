@@ -31,6 +31,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   }
 
   void _loadRestaurantMarkers(List<Restaurant> restaurants) {
+    debugPrint('=== LOADING RESTAURANT MARKERS ===');
+    debugPrint('Number of restaurants: ${restaurants.length}');
+
     setState(() => _isLoading = true);
 
     // Clear existing markers and restaurant map
@@ -90,6 +93,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
+    debugPrint('=== MAP CREATED ===');
+    debugPrint('Map controller initialized successfully');
   }
 
   Future<void> _recenterMap() async {
