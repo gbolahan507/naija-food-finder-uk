@@ -28,6 +28,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   bool _isLoading = true;
   final Map<String, Restaurant> _restaurantMap = {};
   MapType _currentMapType = MapType.normal;
+  bool _showSearchResults = false;
 
   @override
   void initState() {
@@ -204,10 +205,37 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     // Cancel previous timer
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
+    // Show/hide search results
+    setState(() {
+      _showSearchResults = value.isNotEmpty;
+    });
+
     // Set new timer - only update search after 500ms of no typing
     _debounce = Timer(const Duration(milliseconds: 500), () {
       ref.read(searchQueryProvider.notifier).state = value;
     });
+  }
+
+  void _selectRestaurant(Restaurant restaurant) {
+    // Hide search results
+    setState(() {
+      _showSearchResults = false;
+    });
+
+    // Center map on selected restaurant
+    if (_mapController != null) {
+      _mapController!.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(
+              restaurant.latitude ?? _defaultLocation.latitude,
+              restaurant.longitude ?? _defaultLocation.longitude,
+            ),
+            zoom: 16.0,
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> _fitMapToMarkers() async {
@@ -373,53 +401,130 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    // Restaurant count badge - tappable to fit markers
-                    GestureDetector(
-                      onTap: _fitMapToMarkers,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
+
+                    // Search results dropdown
+                    if (_showSearchResults && restaurants.isNotEmpty)
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        constraints: const BoxConstraints(maxHeight: 300),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryGreen,
-                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 4,
+                              blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
                           ],
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.restaurant,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              '${restaurants.length} restaurants',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.zero,
+                          itemCount: restaurants.length,
+                          separatorBuilder: (context, index) => Divider(
+                            height: 1,
+                            color: Colors.grey.withValues(alpha: 0.2),
+                          ),
+                          itemBuilder: (context, index) {
+                            final restaurant = restaurants[index];
+                            return ListTile(
+                              onTap: () => _selectRestaurant(restaurant),
+                              leading: Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: restaurant.isOpenNow
+                                      ? AppColors.primaryGreen
+                                          .withValues(alpha: 0.1)
+                                      : Colors.grey.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Icon(
+                                  Icons.restaurant,
+                                  color: restaurant.isOpenNow
+                                      ? AppColors.primaryGreen
+                                      : Colors.grey,
+                                  size: 20,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 4),
-                            const Icon(
-                              Icons.center_focus_strong,
-                              color: Colors.white,
-                              size: 14,
-                            ),
-                          ],
+                              title: Text(
+                                restaurant.name,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.darkText,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              subtitle: Text(
+                                '${restaurant.rating} ⭐ • ${restaurant.distance}mi${restaurant.isOpenNow ? ' • Open' : ' • Closed'}',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.lightText,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              trailing: Icon(
+                                Icons.location_on,
+                                color: AppColors.primaryGreen,
+                                size: 20,
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    ),
+
+                    const SizedBox(height: 8),
+                    // Restaurant count badge - tappable to fit markers
+                    if (!_showSearchResults)
+                      GestureDetector(
+                        onTap: _fitMapToMarkers,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryGreen,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.1),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.restaurant,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                '${restaurants.length} restaurants',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              const Icon(
+                                Icons.center_focus_strong,
+                                color: Colors.white,
+                                size: 14,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
