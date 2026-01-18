@@ -82,23 +82,41 @@ class RestaurantCard extends ConsumerWidget {
                   child: isFavoriteAsync.when(
                     data: (isFavorite) {
                       return GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           final repository =
                               ref.read(favoritesRepositoryProvider);
-                          repository.toggleFavorite(restaurant.id, isFavorite);
 
-                          // Show feedback
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                isFavorite
-                                    ? 'Removed from favorites'
-                                    : 'Added to favorites',
-                              ),
-                              duration: const Duration(seconds: 1),
-                              backgroundColor: AppColors.primaryGreen,
-                            ),
-                          );
+                          try {
+                            await repository.toggleFavorite(restaurant.id, isFavorite);
+
+                            // Show feedback
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    isFavorite
+                                        ? 'Removed from favorites'
+                                        : 'Added to favorites',
+                                  ),
+                                  duration: const Duration(seconds: 1),
+                                  backgroundColor: AppColors.primaryGreen,
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            // Handle authentication error
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Please log in to save favorites',
+                                  ),
+                                  duration: Duration(seconds: 2),
+                                  backgroundColor: AppColors.error,
+                                ),
+                              );
+                            }
+                          }
                         },
                         child: Container(
                           padding: const EdgeInsets.all(8),
