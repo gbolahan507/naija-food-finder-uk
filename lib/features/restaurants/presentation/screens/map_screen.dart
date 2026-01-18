@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -17,6 +18,7 @@ class MapScreen extends ConsumerStatefulWidget {
 class _MapScreenState extends ConsumerState<MapScreen> {
   GoogleMapController? _mapController;
   final TextEditingController _searchController = TextEditingController();
+  Timer? _debounce;
 
   // Default location: London, UK
   static const LatLng _defaultLocation = LatLng(51.5074, -0.1278);
@@ -92,8 +94,6 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   void _loadRestaurantMarkers(List<Restaurant> restaurants) {
     debugPrint('=== LOADING RESTAURANT MARKERS ===');
     debugPrint('Number of restaurants: ${restaurants.length}');
-
-    setState(() => _isLoading = true);
 
     // Clear existing markers and restaurant map
     _markers.clear();
@@ -200,8 +200,19 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     }
   }
 
+  void _onSearchChanged(String value) {
+    // Cancel previous timer
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    // Set new timer - only update search after 500ms of no typing
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      ref.read(searchQueryProvider.notifier).state = value;
+    });
+  }
+
   @override
   void dispose() {
+    _debounce?.cancel();
     _mapController?.dispose();
     _searchController.dispose();
     super.dispose();
@@ -287,9 +298,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                       ),
                       child: TextField(
                         controller: _searchController,
-                        onChanged: (value) {
-                          ref.read(searchQueryProvider.notifier).state = value;
-                        },
+                        onChanged: _onSearchChanged,
                         decoration: InputDecoration(
                           hintText: 'Search restaurants, cuisines...',
                           prefixIcon: const Icon(
