@@ -24,11 +24,11 @@ void main() async {
     debugPrint(
         'Firebase Storage Bucket: ${Firebase.app().options.storageBucket}');
 
-    // 🔥 CLEANUP & IMPORT - RUN ONCE THEN COMMENT OUT! 🔥
+    // 🔥 CLEANUP & IMPORT - COMPLETED! ✅
     // Step 1: Delete old mock data
-    await cleanupOldRestaurants();
+    // await cleanupOldRestaurants();
     // Step 2: Import 50 new restaurants
-    await addAll50Restaurants();
+    // await addAll50Restaurants();
   } catch (e, stackTrace) {
     debugPrint('Firebase initialization FAILED!');
     debugPrint('Error: $e');
