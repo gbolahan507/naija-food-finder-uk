@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CLIENT_ID</key>
+	<string>620071589254-l528qj9oo3u0hoct5545i30idgg6rcer.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.620071589254-l528qj9oo3u0hoct5545i30idgg6rcer</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>620071589254-gfoe3r31j4p9v3rebavg97mp10du55tc.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBBnD1T-G-kyU69AvFsF9fQZskukwDAfvk</string>
 	<key>GCM_SENDER_ID</key>
@@ -26,7 +32,5 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:620071589254:ios:169a819ca7e46e484c8807</string>
-	<key>DATABASE_URL</key>
-	<string>https://naija-food-finder-uk.firebaseio.com</string>
 </dict>
 </plist>

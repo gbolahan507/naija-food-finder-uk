@@ -66,10 +66,9 @@ final filteredRestaurantsProvider =
     }
 
     // Filter by price range
-    // Include restaurants with matching price range OR null price range (not yet categorized)
     if (filter.selectedPriceRanges.isNotEmpty) {
       filtered = filtered.where((r) {
-        return r.priceRange == null ||
+        return r.priceRange != null &&
             filter.selectedPriceRanges.contains(r.priceRange);
       }).toList();
     }
