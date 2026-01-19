@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
 import 'core/services/price_range_initializer.dart';
+import 'core/services/additional_restaurants_initializer.dart';
 // import 'core/utils/import_data.dart';
 // import 'core/utils/cleanup_firestore.dart';
 
@@ -34,6 +35,10 @@ void main() async {
     // Initialize price ranges for restaurants that don't have them
     final priceRangeInitializer = PriceRangeInitializer();
     await priceRangeInitializer.initializePriceRanges();
+
+    // Add additional restaurants from Luton, Hatfield, Stevenage
+    final additionalRestaurantsInitializer = AdditionalRestaurantsInitializer();
+    await additionalRestaurantsInitializer.addAdditionalRestaurants();
   } catch (e, stackTrace) {
     debugPrint('Firebase initialization FAILED!');
     debugPrint('Error: $e');
