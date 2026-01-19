@@ -14,26 +14,26 @@ This document outlines planned features and enhancements for the Naija Food Find
 
 ## Priority 1 - Core Features
 
-### 1. Favorites Persistence 📋
-**Status:** Planned
+### 1. Favorites Persistence ✅
+**Status:** Completed
 **Effort:** Medium (2-3 days)
 **Description:** Save user's favorite restaurants to Firestore for persistence across sessions and devices.
 
 **Implementation Details:**
-- Create `favorites` collection in Firestore with user ID
-- Migrate from in-memory StateProvider to Firestore
-- Add/remove favorites with real-time sync
-- Load favorites on app start
-- Sync across multiple devices
+- ✅ Created `favorites` subcollection in Firestore with user ID
+- ✅ Migrated from in-memory StateProvider to Firestore
+- ✅ Add/remove favorites with real-time sync
+- ✅ Load favorites on app start
+- ✅ Sync across multiple devices
 
-**Files to Modify:**
+**Files Modified:**
 - `lib/features/restaurants/data/repositories/favorites_repository.dart`
 - `lib/features/restaurants/data/providers/restaurants_provider.dart`
 
 **Benefits:**
-- Users don't lose favorites when closing app
-- Cross-device synchronization
-- Better user retention
+- ✅ Users don't lose favorites when closing app
+- ✅ Cross-device synchronization
+- ✅ Better user retention
 
 ---
 
@@ -60,14 +60,16 @@ This document outlines planned features and enhancements for the Naija Food Find
 
 ---
 
-### 3. Enhanced Filter Modal 📋
-**Status:** Planned
+### 3. Enhanced Filter Modal 🚧
+**Status:** Partially Completed
 **Effort:** Medium (2-3 days)
 **Description:** Add more filtering options to help users find exactly what they want.
 
-**New Filters:**
-- **Price Range:** £, ££, £££, ££££
-- **Cuisine Type Multi-Select:** Select multiple cuisines at once
+**Completed Filters:**
+- ✅ **Price Range:** £, ££, £££
+- ✅ **Cuisine Type Selection:** Select cuisine type
+
+**Remaining Filters:**
 - **Distance Radius Slider:** 0.5mi to 10mi range
 - **Dietary Options:** Vegetarian, Vegan, Halal, Gluten-Free
 - **Features:** Delivery, Takeaway, Dine-in, Outdoor Seating
@@ -466,14 +468,18 @@ When deciding what to build next, consider:
 **Recommended Order:**
 1. ✅ Authentication & Map (DONE)
 2. ✅ Call & Directions (DONE)
-3. Get real Firestore data
-4. Favorites Persistence
-5. Review Pagination
-6. Enhanced Filters
-7. User Profiles
-8. Photo Uploads
-9. Push Notifications
-10. Offline Mode
+3. ✅ Get real Firestore data (57 restaurants) (DONE)
+4. ✅ Favorites Persistence (DONE)
+5. ✅ Enhanced Filters - Partial (DONE: Price, Cuisine)
+6. ✅ User Profiles (DONE)
+7. ✅ Reviews System (DONE)
+8. ✅ Map Enhancements (DONE: Zoom, Gestures, 3D)
+9. ✅ UX Polish (DONE: Empty states, Loading skeletons, Errors)
+10. Review Pagination
+11. Photo Uploads
+12. Push Notifications
+13. Offline Mode
+14. Complete Enhanced Filters (Distance, Dietary, Features, Rating)
 
 ---
 
@@ -498,5 +504,22 @@ For feature requests or questions, please:
 
 ---
 
-**Last Updated:** 2026-01-18
+**Last Updated:** 2026-01-19
 **Maintained By:** Development Team
+
+---
+
+## Recent Accomplishments (v0.5.0)
+
+### January 2026
+- ✅ Added 7 additional restaurants (Luton, Hatfield, Stevenage)
+- ✅ Implemented custom map zoom controls
+- ✅ Enhanced map gestures (zoom, pan, tilt, rotate)
+- ✅ Added 3D buildings and detailed map view
+- ✅ Created reusable empty state widgets
+- ✅ Created reusable error state widgets with retry
+- ✅ Added Hero animations for restaurant images
+- ✅ Implemented loading skeletons for better UX
+- ✅ Added price range data to all restaurants
+- ✅ Updated Firestore rules for restaurant creation
+- ✅ Comprehensive documentation updates
