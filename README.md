@@ -25,19 +25,29 @@ Naija Food Finder UK is a mobile application built with Flutter that helps the N
 ### Advanced Features
 - 🔄 **Sort Options** - Sort by distance, rating, name, or number of reviews
 - 🏷️ **Filter by Cuisine** - Nigerian, Ghanaian, Caribbean, and more
-- 🗺️ **Map Features**:
+- 💰 **Filter by Price Range** - £, ££, £££ categories
+- 🗺️ **Advanced Map Features**:
   - Interactive restaurant markers with info windows
+  - Custom zoom controls (+ / - buttons)
   - Switch between normal and satellite map views
+  - Zoom, pan, tilt, and rotate gestures
+  - 3D buildings and detailed street view
   - Tap markers to view restaurant details
   - Auto-center to fit all visible restaurants
   - Real-time filter integration (search/filter sync with map)
-  - Filter status indicator on map
+  - Restaurant count indicator
+  - Search dropdown with instant results
 - 🚗 **Delivery & Takeaway** - See which restaurants offer delivery or takeaway
-- 🕐 **Opening Hours** - Check if a restaurant is currently open
+- 🕐 **Opening Hours** - Check if a restaurant is currently open with full weekly schedule
 - 📍 **Detailed Information** - View full address, phone number, and services
 - ♻️ **Pull to Refresh** - Fresh data with a simple pull gesture
 - 👤 **User Profiles** - Personalized profiles with authentication
 - 🔄 **Real-time Sync** - Data syncs across devices when signed in
+- ✍️ **Reviews & Ratings** - Read and write reviews with star ratings
+- ✨ **Smooth Animations** - Hero animations for restaurant images
+- 📱 **Empty States** - Beautiful empty state designs
+- 🔄 **Loading Skeletons** - Shimmer loading effects for better UX
+- ⚠️ **Error Handling** - Comprehensive error states with retry options
 
 ## 🛠️ Tech Stack
 
@@ -75,41 +85,50 @@ Naija Food Finder UK is a mobile application built with Flutter that helps the N
 
 ## 📊 Project Status
 
-**Current Version:** 0.4.0
+**Current Version:** 0.5.0
 **Status:** Active Development 🚀
-**Progress:** 90% MVP Complete
+**Progress:** 95% MVP Complete
 
 ### ✅ Completed Features
 - [x] Project architecture and setup
 - [x] Firebase Firestore integration
-- [x] Restaurant list with search
-- [x] Restaurant details screen
+- [x] Restaurant list with search and real-time filtering
+- [x] Restaurant details screen with Hero animations
 - [x] Navigation system (bottom nav + routing)
 - [x] Favorites system with real-time sync
+- [x] Reviews and ratings system (read & write)
 - [x] Sort functionality (distance, rating, name, reviews)
-- [x] Pull-to-refresh
+- [x] Filter by cuisine type and price range
+- [x] Pull-to-refresh on all screens
 - [x] Share restaurant functionality
 - [x] User authentication (Email/Password + Google Sign-In)
 - [x] User profile management
-- [x] Sign in/Sign up screens
+- [x] Sign in/Sign up screens with validation
 - [x] Logout functionality
 - [x] Google Maps integration with interactive markers
 - [x] Map view with normal/satellite toggle
+- [x] Custom zoom controls for map
+- [x] Map features (zoom, pan, tilt, rotate gestures)
+- [x] Building and detail visibility on map
 - [x] Filter integration with map (search/filter sync)
 - [x] Location service helper
 - [x] CI/CD pipeline
-
-### 🔨 In Progress
-- [ ] Reviews and ratings system
-- [ ] User-specific data sync
-- [ ] Advanced map features (clustering, custom markers)
+- [x] Empty state widgets
+- [x] Error state widgets with retry
+- [x] Loading skeletons for better UX
+- [x] 57 real restaurants imported (London, Luton, Hatfield, Stevenage)
+- [x] Price range data for all restaurants
 
 ### 📋 Upcoming Features
-- [ ] Advanced filters
-- [ ] User profiles
-- [ ] Photo galleries
-- [ ] Opening hours display
-- [ ] Call and directions integration
+- [ ] Navigation & directions to restaurants
+- [ ] Add photos to reviews
+- [ ] Helpful review voting
+- [ ] Settings page (theme, notifications, units)
+- [ ] App onboarding/tutorial
+- [ ] Social features (user profiles, follow users)
+- [ ] Offline support
+- [ ] Push notifications
+- [ ] Restaurant owner dashboard
 
 ## 🚀 Getting Started
 
@@ -192,12 +211,14 @@ Built by **Hameed Abolaji**
 
 ## 📈 Metrics
 
-- **Active Development:** 5-day streak
-- **Contributions:** 60+ contributions
+- **Active Development:** Ongoing
+- **Contributions:** 70+ contributions
 - **Code Quality:** All CI checks passing
 - **Backend:** Real-time Firebase integration
 - **Authentication:** Email/Password + Google Sign-In
-- **Features:** 15+ major features implemented
+- **Features:** 25+ major features implemented
+- **Restaurant Database:** 57 real restaurants across 4 cities
+- **User Experience:** Loading skeletons, empty states, error handling
 
 ---
 
