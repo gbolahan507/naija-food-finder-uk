@@ -1,5 +1,17 @@
 import 'package:equatable/equatable.dart';
 
+/// Price range for restaurants
+enum PriceRange {
+  budget('£', 'Budget-friendly'),
+  moderate('££', 'Moderate'),
+  expensive('£££', 'Expensive'),
+  luxury('££££', 'Luxury');
+
+  final String symbol;
+  final String label;
+  const PriceRange(this.symbol, this.label);
+}
+
 /// Model class for restaurant filtering
 class RestaurantFilter extends Equatable {
   final double maxDistance; // in miles
@@ -8,6 +20,8 @@ class RestaurantFilter extends Equatable {
       isOpenNow; // null = don't filter, true = open only, false = closed only
   final bool hasDelivery;
   final bool hasTakeaway;
+  final List<PriceRange> selectedPriceRanges;
+  final double? minimumRating; // null = no minimum, 0.0-5.0
 
   const RestaurantFilter({
     this.maxDistance = 10.0,
@@ -15,6 +29,8 @@ class RestaurantFilter extends Equatable {
     this.isOpenNow,
     this.hasDelivery = false,
     this.hasTakeaway = false,
+    this.selectedPriceRanges = const [],
+    this.minimumRating,
   });
 
   /// Create an empty filter (no filters applied)
@@ -23,7 +39,9 @@ class RestaurantFilter extends Equatable {
         selectedCuisines = const [],
         isOpenNow = null,
         hasDelivery = false,
-        hasTakeaway = false;
+        hasTakeaway = false,
+        selectedPriceRanges = const [],
+        minimumRating = null;
 
   /// Check if any filters are active
   bool get hasActiveFilters {
@@ -31,7 +49,9 @@ class RestaurantFilter extends Equatable {
         selectedCuisines.isNotEmpty ||
         isOpenNow != null ||
         hasDelivery ||
-        hasTakeaway;
+        hasTakeaway ||
+        selectedPriceRanges.isNotEmpty ||
+        minimumRating != null;
   }
 
   /// Count the number of active filters
@@ -42,6 +62,8 @@ class RestaurantFilter extends Equatable {
     if (isOpenNow != null) count++;
     if (hasDelivery) count++;
     if (hasTakeaway) count++;
+    if (selectedPriceRanges.isNotEmpty) count++;
+    if (minimumRating != null) count++;
     return count;
   }
 
@@ -52,7 +74,10 @@ class RestaurantFilter extends Equatable {
     bool? isOpenNow,
     bool? hasDelivery,
     bool? hasTakeaway,
+    List<PriceRange>? selectedPriceRanges,
+    double? minimumRating,
     bool clearOpenNow = false,
+    bool clearMinimumRating = false,
   }) {
     return RestaurantFilter(
       maxDistance: maxDistance ?? this.maxDistance,
@@ -60,6 +85,8 @@ class RestaurantFilter extends Equatable {
       isOpenNow: clearOpenNow ? null : (isOpenNow ?? this.isOpenNow),
       hasDelivery: hasDelivery ?? this.hasDelivery,
       hasTakeaway: hasTakeaway ?? this.hasTakeaway,
+      selectedPriceRanges: selectedPriceRanges ?? this.selectedPriceRanges,
+      minimumRating: clearMinimumRating ? null : (minimumRating ?? this.minimumRating),
     );
   }
 
@@ -70,5 +97,7 @@ class RestaurantFilter extends Equatable {
         isOpenNow,
         hasDelivery,
         hasTakeaway,
+        selectedPriceRanges,
+        minimumRating,
       ];
 }

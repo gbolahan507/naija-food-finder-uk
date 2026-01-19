@@ -65,6 +65,19 @@ final filteredRestaurantsProvider =
       filtered = filtered.where((r) => r.hasTakeaway).toList();
     }
 
+    // Filter by price range
+    if (filter.selectedPriceRanges.isNotEmpty) {
+      filtered = filtered.where((r) {
+        return r.priceRange != null &&
+            filter.selectedPriceRanges.contains(r.priceRange);
+      }).toList();
+    }
+
+    // Filter by minimum rating
+    if (filter.minimumRating != null) {
+      filtered = filtered.where((r) => r.rating >= filter.minimumRating!).toList();
+    }
+
     yield filtered;
   }
 });
