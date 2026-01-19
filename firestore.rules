@@ -29,7 +29,7 @@ service cloud.firestore {
     // Reviews collection - for querying all reviews
     match /reviews/{reviewId} {
       allow read: if true; // Anyone can read reviews
-      allow create: if request.auth != null; // Only authenticated users can create
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid; // Only authenticated users can create their own reviews
       allow update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
     }
   }
