@@ -63,6 +63,27 @@ class _FilterModalState extends ConsumerState<FilterModal> {
     });
   }
 
+  void _togglePriceRange(PriceRange priceRange) {
+    setState(() {
+      final prices = List<PriceRange>.from(_tempFilter.selectedPriceRanges);
+      if (prices.contains(priceRange)) {
+        prices.remove(priceRange);
+      } else {
+        prices.add(priceRange);
+      }
+      _tempFilter = _tempFilter.copyWith(selectedPriceRanges: prices);
+    });
+  }
+
+  void _updateMinimumRating(double? value) {
+    setState(() {
+      _tempFilter = _tempFilter.copyWith(
+        minimumRating: value,
+        clearMinimumRating: value == null,
+      );
+    });
+  }
+
   void _clearFilters() {
     setState(() {
       _tempFilter = const RestaurantFilter.empty();
@@ -146,6 +167,18 @@ class _FilterModalState extends ConsumerState<FilterModal> {
                   _buildSectionTitle('Services'),
                   const SizedBox(height: 8),
                   _buildServicesToggles(),
+                  const SizedBox(height: 24),
+
+                  // Price Range
+                  _buildSectionTitle('Price Range'),
+                  const SizedBox(height: 12),
+                  _buildPriceRangeChips(),
+                  const SizedBox(height: 24),
+
+                  // Minimum Rating
+                  _buildSectionTitle('Minimum Rating'),
+                  const SizedBox(height: 12),
+                  _buildRatingSelector(),
                   const SizedBox(height: 24),
                 ],
               ),
@@ -298,6 +331,64 @@ class _FilterModalState extends ConsumerState<FilterModal> {
             activeThumbColor: AppColors.primaryGreen,
             activeTrackColor: AppColors.primaryGreen.withValues(alpha: 0.5),
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPriceRangeChips() {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: PriceRange.values.map((priceRange) {
+        final isSelected = _tempFilter.selectedPriceRanges.contains(priceRange);
+        return FilterChip(
+          label: Text('${priceRange.symbol} ${priceRange.label}'),
+          selected: isSelected,
+          onSelected: (_) => _togglePriceRange(priceRange),
+          selectedColor: AppColors.primaryGreen.withValues(alpha: 0.2),
+          checkmarkColor: AppColors.primaryGreen,
+          side: BorderSide(
+            color: isSelected ? AppColors.primaryGreen : Colors.grey[300]!,
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildRatingSelector() {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('Show restaurants rated'),
+            Text(
+              _tempFilter.minimumRating != null
+                  ? '${_tempFilter.minimumRating!.toStringAsFixed(1)}+ stars'
+                  : 'Any rating',
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                color: AppColors.primaryGreen,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          children: [null, 3.0, 3.5, 4.0, 4.5].map((rating) {
+            final isSelected = _tempFilter.minimumRating == rating;
+            return ChoiceChip(
+              label: Text(rating == null ? 'Any' : '$rating+'),
+              selected: isSelected,
+              onSelected: (_) => _updateMinimumRating(rating),
+              selectedColor: AppColors.primaryGreen.withValues(alpha: 0.2),
+              side: BorderSide(
+                color: isSelected ? AppColors.primaryGreen : Colors.grey[300]!,
+              ),
+            );
+          }).toList(),
         ),
       ],
     );
