@@ -6,7 +6,9 @@ service cloud.firestore {
     // Restaurants collection - read-only for all users
     match /restaurants/{restaurantId} {
       allow read: if true;
-      allow write: if false; // Only admins can write (via Firebase Console)
+      // Allow updating only the priceRange field for initialization
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['priceRange']);
+      allow create, delete: if false; // Only admins can create/delete (via Firebase Console)
     }
 
     // User-specific data
