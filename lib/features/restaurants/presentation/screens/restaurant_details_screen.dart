@@ -80,19 +80,22 @@ class RestaurantDetailsScreen extends ConsumerWidget {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.network(
-                    restaurant.imageUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: AppColors.lightGrey,
-                        child: const Icon(
-                          Icons.restaurant,
-                          size: 80,
-                          color: AppColors.mediumGrey,
-                        ),
-                      );
-                    },
+                  Hero(
+                    tag: 'restaurant-image-${restaurant.id}',
+                    child: Image.network(
+                      restaurant.imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: AppColors.lightGrey,
+                          child: const Icon(
+                            Icons.restaurant,
+                            size: 80,
+                            color: AppColors.mediumGrey,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                   // Gradient overlay
                   Container(

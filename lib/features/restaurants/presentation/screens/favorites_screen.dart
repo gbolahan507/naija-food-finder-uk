@@ -4,6 +4,8 @@ import '../../data/providers/restaurants_provider.dart';
 import '../widgets/restaurant_card.dart';
 import 'restaurant_details_screen.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/empty_state.dart';
+import '../../../../core/widgets/error_state.dart';
 
 class FavoritesScreen extends ConsumerWidget {
   const FavoritesScreen({super.key});
@@ -27,34 +29,11 @@ class FavoritesScreen extends ConsumerWidget {
       body: favoritesAsync.when(
         data: (favoriteIds) {
           if (favoriteIds.isEmpty) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.favorite_border,
-                    size: 80,
-                    color: AppColors.mediumGrey,
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'No favorites yet',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Tap the heart icon on any restaurant\nto add it to your favorites!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: AppColors.lightText,
-                    ),
-                  ),
-                ],
-              ),
+            return EmptyState.noFavorites(
+              onExplore: () {
+                // Switch to restaurants tab
+                DefaultTabController.of(context).animateTo(0);
+              },
             );
           }
 
@@ -109,8 +88,11 @@ class FavoritesScreen extends ConsumerWidget {
                 color: AppColors.primaryGreen,
               ),
             ),
-            error: (error, stack) => Center(
-              child: Text('Error: $error'),
+            error: (error, stack) => ErrorState.custom(
+              error: error.toString(),
+              onRetry: () {
+                ref.invalidate(restaurantsProvider);
+              },
             ),
           );
         },
@@ -119,8 +101,11 @@ class FavoritesScreen extends ConsumerWidget {
             color: AppColors.primaryGreen,
           ),
         ),
-        error: (error, stack) => Center(
-          child: Text('Error: $error'),
+        error: (error, stack) => ErrorState.custom(
+          error: error.toString(),
+          onRetry: () {
+            ref.invalidate(favoritesProvider);
+          },
         ),
       ),
     );
