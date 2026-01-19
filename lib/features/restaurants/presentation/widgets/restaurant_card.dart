@@ -29,26 +29,29 @@ class RestaurantCard extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Restaurant Image
+            // Restaurant Image with Hero animation
             Stack(
               children: [
-                SizedBox(
-                  height: 150,
-                  width: double.infinity,
-                  child: Image.network(
-                    restaurant.imageUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        height: 150,
-                        color: AppColors.lightGrey,
-                        child: const Icon(
-                          Icons.restaurant,
-                          size: 50,
-                          color: AppColors.mediumGrey,
-                        ),
-                      );
-                    },
+                Hero(
+                  tag: 'restaurant-image-${restaurant.id}',
+                  child: SizedBox(
+                    height: 150,
+                    width: double.infinity,
+                    child: Image.network(
+                      restaurant.imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          height: 150,
+                          color: AppColors.lightGrey,
+                          child: const Icon(
+                            Icons.restaurant,
+                            size: 50,
+                            color: AppColors.mediumGrey,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
                 // Open/Closed Badge

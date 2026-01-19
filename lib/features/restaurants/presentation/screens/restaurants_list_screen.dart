@@ -3,11 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/providers/restaurants_provider.dart';
 import '../../data/providers/filter_provider.dart';
 import '../../data/models/restaurant_model.dart';
+import '../../data/models/restaurant_filter.dart';
 import '../widgets/restaurant_card.dart';
 import '../widgets/restaurant_card_skeleton.dart';
 import '../widgets/filter_modal.dart';
 import 'restaurant_details_screen.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/empty_state.dart';
+import '../../../../core/widgets/error_state.dart';
 
 class RestaurantsListScreen extends ConsumerStatefulWidget {
   const RestaurantsListScreen({super.key});
@@ -356,34 +359,9 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
                 itemCount: 5,
                 itemBuilder: (context, index) => const RestaurantCardSkeleton(),
               ),
-              error: (error, stack) => Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.error_outline,
-                      size: 64,
-                      color: AppColors.error,
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Something went wrong',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      error.toString(),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: AppColors.lightText,
-                      ),
-                    ),
-                  ],
-                ),
+              error: (error, stack) => ErrorState.custom(
+                error: error.toString(),
+                onRetry: _onRefresh,
               ),
             ),
           ),
@@ -394,34 +372,20 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
 
   Widget _buildRestaurantList(List<Restaurant> restaurants) {
     if (restaurants.isEmpty) {
-      return const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.search_off,
-              size: 64,
-              color: AppColors.mediumGrey,
-            ),
-            SizedBox(height: 16),
-            Text(
-              'No restaurants found',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: AppColors.darkText,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Try adjusting your search or filters',
-              style: TextStyle(
-                fontSize: 14,
-                color: AppColors.lightText,
-              ),
-            ),
-          ],
-        ),
+      final filter = ref.read(restaurantFilterProvider);
+      return EmptyState.noResults(
+        searchQuery: _searchController.text,
+        onClearFilters: filter.hasActiveFilters
+            ? () {
+                ref.read(restaurantFilterProvider.notifier).state =
+                    const RestaurantFilter.empty();
+                setState(() {
+                  _searchController.clear();
+                  ref.read(searchQueryProvider.notifier).state = '';
+                  selectedFilter = 'All';
+                });
+              }
+            : null,
       );
     }
 
