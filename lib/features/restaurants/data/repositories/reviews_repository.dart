@@ -3,8 +3,9 @@ import '../models/review_model.dart';
 
 class ReviewsRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static const int reviewsPerPage = 10;
 
-  // Get reviews for a specific restaurant
+  // Get reviews for a specific restaurant (all reviews - used for backward compatibility)
   Stream<List<Review>> getRestaurantReviews(String restaurantId) {
     return _firestore
         .collection('reviews')
@@ -16,6 +17,49 @@ class ReviewsRepository {
           .map((doc) => Review.fromFirestore(doc.data(), doc.id))
           .toList();
     });
+  }
+
+  // Get initial page of reviews (paginated)
+  Future<List<Review>> getInitialReviews(String restaurantId) async {
+    final snapshot = await _firestore
+        .collection('reviews')
+        .where('restaurantId', isEqualTo: restaurantId)
+        .orderBy('createdAt', descending: true)
+        .limit(reviewsPerPage)
+        .get();
+
+    return snapshot.docs
+        .map((doc) => Review.fromFirestore(doc.data(), doc.id))
+        .toList();
+  }
+
+  // Get next page of reviews (paginated)
+  Future<List<Review>> getMoreReviews(
+    String restaurantId,
+    DocumentSnapshot lastDocument,
+  ) async {
+    final snapshot = await _firestore
+        .collection('reviews')
+        .where('restaurantId', isEqualTo: restaurantId)
+        .orderBy('createdAt', descending: true)
+        .startAfterDocument(lastDocument)
+        .limit(reviewsPerPage)
+        .get();
+
+    return snapshot.docs
+        .map((doc) => Review.fromFirestore(doc.data(), doc.id))
+        .toList();
+  }
+
+  // Get total review count for pagination UI
+  Future<int> getTotalReviewCount(String restaurantId) async {
+    final snapshot = await _firestore
+        .collection('reviews')
+        .where('restaurantId', isEqualTo: restaurantId)
+        .count()
+        .get();
+
+    return snapshot.count ?? 0;
   }
 
   // Add a new review
