@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import '../models/review_model.dart';
 
 class ReviewsRepository {
@@ -71,16 +72,27 @@ class ReviewsRepository {
     required double rating,
     required String comment,
   }) async {
-    await _firestore.collection('reviews').add({
-      'restaurantId': restaurantId,
-      'userId': userId,
-      'userName': userName,
-      'userPhotoUrl': userPhotoUrl,
-      'rating': rating,
-      'comment': comment,
-      'createdAt': FieldValue.serverTimestamp(),
-      'updatedAt': null,
-    });
+    debugPrint('📝 Adding review for restaurant: $restaurantId');
+    debugPrint('📝 User: $userName ($userId)');
+    debugPrint('📝 Rating: $rating');
+
+    try {
+      final docRef = await _firestore.collection('reviews').add({
+        'restaurantId': restaurantId,
+        'userId': userId,
+        'userName': userName,
+        'userPhotoUrl': userPhotoUrl,
+        'rating': rating,
+        'comment': comment,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': null,
+      });
+      debugPrint('✅ Review added successfully with ID: ${docRef.id}');
+    } catch (e, stackTrace) {
+      debugPrint('❌ Error adding review: $e');
+      debugPrint('❌ Stack trace: $stackTrace');
+      rethrow;
+    }
   }
 
   // Update an existing review
