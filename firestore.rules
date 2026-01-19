@@ -6,9 +6,11 @@ service cloud.firestore {
     // Restaurants collection - read-only for all users
     match /restaurants/{restaurantId} {
       allow read: if true;
+      // Allow creating new restaurants and updating priceRange field for initialization
+      allow create: if true; // Allow app to add new restaurants
       // Allow updating only the priceRange field for initialization
       allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['priceRange']);
-      allow create, delete: if false; // Only admins can create/delete (via Firebase Console)
+      allow delete: if false; // Only admins can delete (via Firebase Console)
     }
 
     // User-specific data
