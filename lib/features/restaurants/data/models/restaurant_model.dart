@@ -1,3 +1,5 @@
+import 'restaurant_filter.dart';
+
 // Opening hours for a single day
 class DayHours {
   final String day;
@@ -48,6 +50,7 @@ class Restaurant {
   final double? longitude;
   final List<DayHours>? openingHours;
   final String? phone;
+  final PriceRange? priceRange;
 
   const Restaurant({
     required this.id,
@@ -66,6 +69,7 @@ class Restaurant {
     this.longitude,
     this.openingHours,
     this.phone,
+    this.priceRange,
   });
 
   // Factory method to create from Firestore document
@@ -75,6 +79,16 @@ class Restaurant {
       hours = (data['openingHours'] as List)
           .map((item) => DayHours.fromMap(item as Map<String, dynamic>))
           .toList();
+    }
+
+    // Parse price range from string
+    PriceRange? priceRange;
+    if (data['priceRange'] != null) {
+      final priceRangeStr = data['priceRange'] as String;
+      priceRange = PriceRange.values.firstWhere(
+        (pr) => pr.symbol == priceRangeStr,
+        orElse: () => PriceRange.moderate,
+      );
     }
 
     return Restaurant(
@@ -94,6 +108,7 @@ class Restaurant {
       longitude: (data['longitude'] as num?)?.toDouble(),
       openingHours: hours,
       phone: data['phone'] as String?,
+      priceRange: priceRange,
     );
   }
 
@@ -115,6 +130,7 @@ class Restaurant {
       'longitude': longitude,
       'openingHours': openingHours?.map((h) => h.toMap()).toList(),
       'phone': phone,
+      'priceRange': priceRange?.symbol,
     };
   }
 }
