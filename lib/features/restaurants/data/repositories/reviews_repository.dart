@@ -8,16 +8,21 @@ class ReviewsRepository {
 
   // Get reviews for a specific restaurant (all reviews - used for backward compatibility)
   Stream<List<Review>> getRestaurantReviews(String restaurantId) {
+    debugPrint('📖 Fetching reviews for restaurant: $restaurantId');
     return _firestore
         .collection('reviews')
         .where('restaurantId', isEqualTo: restaurantId)
         .orderBy('createdAt', descending: true)
         .snapshots()
+        .handleError((error) {
+          debugPrint('❌ Error fetching reviews: $error');
+        })
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => Review.fromFirestore(doc.data(), doc.id))
-          .toList();
-    });
+          debugPrint('📖 Found ${snapshot.docs.length} reviews');
+          return snapshot.docs
+              .map((doc) => Review.fromFirestore(doc.data(), doc.id))
+              .toList();
+        });
   }
 
   // Get initial page of reviews (paginated)
