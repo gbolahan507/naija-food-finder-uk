@@ -25,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -60,6 +57,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '620071589254',
     projectId: 'naija-food-finder-uk',
     storageBucket: 'naija-food-finder-uk.firebasestorage.app',
+    androidClientId: '620071589254-gfoe3r31j4p9v3rebavg97mp10du55tc.apps.googleusercontent.com',
+    iosClientId: '620071589254-l528qj9oo3u0hoct5545i30idgg6rcer.apps.googleusercontent.com',
     iosBundleId: 'com.naijafoodfinder.naijaFoodFinderUk',
   );
 
@@ -71,4 +70,16 @@ class DefaultFirebaseOptions {
     storageBucket: 'naija-food-finder-uk.firebasestorage.app',
     authDomain: 'naija-food-finder-uk.firebaseapp.com',
   );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBBnD1T-G-kyU69AvFsF9fQZskukwDAfvk',
+    appId: '1:620071589254:ios:169a819ca7e46e484c8807',
+    messagingSenderId: '620071589254',
+    projectId: 'naija-food-finder-uk',
+    storageBucket: 'naija-food-finder-uk.firebasestorage.app',
+    androidClientId: '620071589254-gfoe3r31j4p9v3rebavg97mp10du55tc.apps.googleusercontent.com',
+    iosClientId: '620071589254-l528qj9oo3u0hoct5545i30idgg6rcer.apps.googleusercontent.com',
+    iosBundleId: 'com.naijafoodfinder.naijaFoodFinderUk',
+  );
+
 }
