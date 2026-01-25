@@ -313,9 +313,11 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       body: restaurantsAsync.when(
         data: (restaurants) {
           // Update markers when filtered restaurants change
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _loadRestaurantMarkers(restaurants);
-          });
+          if (_markers.isEmpty || _isLoading) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _loadRestaurantMarkers(restaurants);
+            });
+          }
 
           return Stack(
             children: [
@@ -328,10 +330,18 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 markers: _markers,
                 myLocationEnabled: true,
                 myLocationButtonEnabled: false,
-                zoomControlsEnabled: false,
+                zoomControlsEnabled: true,
+                zoomGesturesEnabled: true,
+                scrollGesturesEnabled: true,
+                tiltGesturesEnabled: true,
+                rotateGesturesEnabled: true,
                 mapToolbarEnabled: false,
                 compassEnabled: true,
                 mapType: _currentMapType,
+                minMaxZoomPreference: const MinMaxZoomPreference(10.0, 20.0),
+                buildingsEnabled: true,
+                trafficEnabled: false,
+                indoorViewEnabled: true,
               ),
 
               // Loading indicator
@@ -530,26 +540,69 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 ),
               ),
 
-              // Map type toggle button
+              // Zoom controls
               Positioned(
                 bottom: 16,
                 right: 16,
-                child: FloatingActionButton(
-                  mini: true,
-                  backgroundColor: Colors.white,
-                  onPressed: () {
-                    setState(() {
-                      _currentMapType = _currentMapType == MapType.normal
-                          ? MapType.satellite
-                          : MapType.normal;
-                    });
-                  },
-                  child: Icon(
-                    _currentMapType == MapType.normal
-                        ? Icons.satellite_alt
-                        : Icons.map,
-                    color: AppColors.primaryGreen,
-                  ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Zoom In button
+                    FloatingActionButton(
+                      mini: true,
+                      backgroundColor: Colors.white,
+                      heroTag: 'zoom_in',
+                      onPressed: () async {
+                        if (_mapController != null) {
+                          await _mapController!.animateCamera(
+                            CameraUpdate.zoomIn(),
+                          );
+                        }
+                      },
+                      child: const Icon(
+                        Icons.add,
+                        color: AppColors.primaryGreen,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    // Zoom Out button
+                    FloatingActionButton(
+                      mini: true,
+                      backgroundColor: Colors.white,
+                      heroTag: 'zoom_out',
+                      onPressed: () async {
+                        if (_mapController != null) {
+                          await _mapController!.animateCamera(
+                            CameraUpdate.zoomOut(),
+                          );
+                        }
+                      },
+                      child: const Icon(
+                        Icons.remove,
+                        color: AppColors.primaryGreen,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    // Map type toggle button
+                    FloatingActionButton(
+                      mini: true,
+                      backgroundColor: Colors.white,
+                      heroTag: 'map_type',
+                      onPressed: () {
+                        setState(() {
+                          _currentMapType = _currentMapType == MapType.normal
+                              ? MapType.satellite
+                              : MapType.normal;
+                        });
+                      },
+                      child: Icon(
+                        _currentMapType == MapType.normal
+                            ? Icons.satellite_alt
+                            : Icons.map,
+                        color: AppColors.primaryGreen,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
