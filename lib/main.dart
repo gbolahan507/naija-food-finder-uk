@@ -33,12 +33,13 @@ void main() async {
     // await addAll50Restaurants();
 
     // Initialize price ranges for restaurants that don't have them
-    final priceRangeInitializer = PriceRangeInitializer();
-    await priceRangeInitializer.initializePriceRanges();
+    // NOTE: These are one-time operations - uncomment if needed
+    // final priceRangeInitializer = PriceRangeInitializer();
+    // await priceRangeInitializer.initializePriceRanges();
 
     // Add additional restaurants from Luton, Hatfield, Stevenage
-    final additionalRestaurantsInitializer = AdditionalRestaurantsInitializer();
-    await additionalRestaurantsInitializer.addAdditionalRestaurants();
+    // final additionalRestaurantsInitializer = AdditionalRestaurantsInitializer();
+    // await additionalRestaurantsInitializer.addAdditionalRestaurants();
   } catch (e, stackTrace) {
     debugPrint('Firebase initialization FAILED!');
     debugPrint('Error: $e');

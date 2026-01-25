@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:naija_food_finder_uk/features/restaurants/data/providers/restaurants_provider.dart';
 import 'package:naija_food_finder_uk/features/restaurants/presentation/screens/favorites_screen.dart';
+import 'package:naija_food_finder_uk/features/restaurants/presentation/screens/search_screen.dart';
 import '../../features/auth/data/providers/auth_provider.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/restaurants/presentation/screens/restaurants_list_screen.dart';
@@ -19,7 +20,7 @@ class MainNavigation extends ConsumerWidget {
   // Placeholder screens for other tabs
   static const List<Widget> _screens = [
     RestaurantsListScreen(),
-    SearchTabScreen(),
+    SearchScreen(),
     MapScreen(),
     ProfileTabScreen(),
   ];
