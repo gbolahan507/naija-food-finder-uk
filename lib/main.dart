@@ -5,10 +5,7 @@ import 'package:naija_food_finder_uk/core/router/app_router.dart';
 import 'firebase_options.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
-import 'core/services/price_range_initializer.dart';
-import 'core/services/additional_restaurants_initializer.dart';
-// import 'core/utils/import_data.dart';
-// import 'core/utils/cleanup_firestore.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,21 +22,6 @@ void main() async {
     debugPrint('Firebase Project ID: ${Firebase.app().options.projectId}');
     debugPrint(
         'Firebase Storage Bucket: ${Firebase.app().options.storageBucket}');
-
-    // 🔥 CLEANUP & IMPORT - COMPLETED! ✅
-    // Step 1: Delete old mock data
-    // await cleanupOldRestaurants();
-    // Step 2: Import 50 new restaurants
-    // await addAll50Restaurants();
-
-    // Initialize price ranges for restaurants that don't have them
-    // NOTE: These are one-time operations - uncomment if needed
-    // final priceRangeInitializer = PriceRangeInitializer();
-    // await priceRangeInitializer.initializePriceRanges();
-
-    // Add additional restaurants from Luton, Hatfield, Stevenage
-    // final additionalRestaurantsInitializer = AdditionalRestaurantsInitializer();
-    // await additionalRestaurantsInitializer.addAdditionalRestaurants();
   } catch (e, stackTrace) {
     debugPrint('Firebase initialization FAILED!');
     debugPrint('Error: $e');

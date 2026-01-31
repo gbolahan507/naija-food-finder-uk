@@ -20,6 +20,8 @@ class AppUser {
     this.favoriteRestaurants = const [],
   });
 
+  
+
   /// Create AppUser from Firebase User and Firestore data
   factory AppUser.fromFirestore(
     String id,

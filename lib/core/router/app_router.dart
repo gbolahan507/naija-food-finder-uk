@@ -51,6 +51,10 @@ class AuthGate extends ConsumerWidget {
   }
 }
 
+
+
+
+
 class AppRouter {
   static final GoRouter router = GoRouter(
     initialLocation: '/',

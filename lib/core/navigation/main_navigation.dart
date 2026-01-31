@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:naija_food_finder_uk/features/restaurants/data/providers/restaurants_provider.dart';
 import 'package:naija_food_finder_uk/features/restaurants/presentation/screens/favorites_screen.dart';
-import 'package:naija_food_finder_uk/features/restaurants/presentation/screens/search_screen.dart';
 import '../../features/auth/data/providers/auth_provider.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/restaurants/presentation/screens/restaurants_list_screen.dart';
@@ -17,10 +16,10 @@ final selectedNavigationIndexProvider = StateProvider<int>((ref) => 0);
 class MainNavigation extends ConsumerWidget {
   const MainNavigation({super.key});
 
-  // Placeholder screens for other tabs
+  // Navigation screens
   static const List<Widget> _screens = [
     RestaurantsListScreen(),
-    SearchScreen(),
+    FavoritesScreen(),
     MapScreen(),
     ProfileTabScreen(),
   ];
@@ -48,9 +47,9 @@ class MainNavigation extends ConsumerWidget {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search_outlined),
-            activeIcon: Icon(Icons.search),
-            label: 'Search',
+            icon: Icon(Icons.favorite_outline),
+            activeIcon: Icon(Icons.favorite),
+            label: 'Favorites',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.map_outlined),
