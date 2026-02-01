@@ -33,6 +33,23 @@ class DayHours {
   }
 }
 
+/// Source of restaurant data
+enum RestaurantSource {
+  manual('manual'),
+  placesApi('places_api'),
+  userSubmitted('user_submitted');
+
+  final String value;
+  const RestaurantSource(this.value);
+
+  static RestaurantSource fromString(String? value) {
+    return RestaurantSource.values.firstWhere(
+      (source) => source.value == value,
+      orElse: () => RestaurantSource.manual,
+    );
+  }
+}
+
 class Restaurant {
   final String id;
   final String name;
@@ -51,6 +68,11 @@ class Restaurant {
   final List<DayHours>? openingHours;
   final String? phone;
   final PriceRange? priceRange;
+  // Google Places API fields
+  final String? placeId;
+  final DateTime? lastSyncedAt;
+  final RestaurantSource? source;
+  final String? website;
 
   const Restaurant({
     required this.id,
@@ -70,6 +92,10 @@ class Restaurant {
     this.openingHours,
     this.phone,
     this.priceRange,
+    this.placeId,
+    this.lastSyncedAt,
+    this.source,
+    this.website,
   });
 
   // Factory method to create from Firestore document
@@ -91,6 +117,12 @@ class Restaurant {
       );
     }
 
+    // Parse lastSyncedAt
+    DateTime? lastSyncedAt;
+    if (data['lastSyncedAt'] != null) {
+      lastSyncedAt = DateTime.tryParse(data['lastSyncedAt'] as String);
+    }
+
     return Restaurant(
       id: id,
       name: data['name'] as String? ?? '',
@@ -109,6 +141,10 @@ class Restaurant {
       openingHours: hours,
       phone: data['phone'] as String?,
       priceRange: priceRange,
+      placeId: data['placeId'] as String?,
+      lastSyncedAt: lastSyncedAt,
+      source: RestaurantSource.fromString(data['source'] as String?),
+      website: data['website'] as String?,
     );
   }
 
@@ -131,6 +167,59 @@ class Restaurant {
       'openingHours': openingHours?.map((h) => h.toMap()).toList(),
       'phone': phone,
       'priceRange': priceRange?.symbol,
+      'placeId': placeId,
+      'lastSyncedAt': lastSyncedAt?.toIso8601String(),
+      'source': source?.value,
+      'website': website,
     };
+  }
+
+  // CopyWith method for immutable updates
+  Restaurant copyWith({
+    String? id,
+    String? name,
+    String? address,
+    String? city,
+    double? distance,
+    double? rating,
+    int? reviewCount,
+    List<String>? cuisineTypes,
+    bool? hasDelivery,
+    bool? hasTakeaway,
+    bool? isOpenNow,
+    String? imageUrl,
+    double? latitude,
+    double? longitude,
+    List<DayHours>? openingHours,
+    String? phone,
+    PriceRange? priceRange,
+    String? placeId,
+    DateTime? lastSyncedAt,
+    RestaurantSource? source,
+    String? website,
+  }) {
+    return Restaurant(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      address: address ?? this.address,
+      city: city ?? this.city,
+      distance: distance ?? this.distance,
+      rating: rating ?? this.rating,
+      reviewCount: reviewCount ?? this.reviewCount,
+      cuisineTypes: cuisineTypes ?? this.cuisineTypes,
+      hasDelivery: hasDelivery ?? this.hasDelivery,
+      hasTakeaway: hasTakeaway ?? this.hasTakeaway,
+      isOpenNow: isOpenNow ?? this.isOpenNow,
+      imageUrl: imageUrl ?? this.imageUrl,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      openingHours: openingHours ?? this.openingHours,
+      phone: phone ?? this.phone,
+      priceRange: priceRange ?? this.priceRange,
+      placeId: placeId ?? this.placeId,
+      lastSyncedAt: lastSyncedAt ?? this.lastSyncedAt,
+      source: source ?? this.source,
+      website: website ?? this.website,
+    );
   }
 }
