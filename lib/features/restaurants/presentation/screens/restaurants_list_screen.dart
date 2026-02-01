@@ -8,7 +8,6 @@ import '../widgets/restaurant_card.dart';
 import '../widgets/restaurant_card_skeleton.dart';
 import '../widgets/filter_modal.dart';
 import 'restaurant_details_screen.dart';
-import 'discover_screen.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/empty_state.dart';
 import '../../../../core/widgets/error_state.dart';
@@ -97,14 +96,6 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
     await Future.delayed(const Duration(milliseconds: 500));
   }
 
-  void _navigateToDiscover() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const DiscoverScreen(),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -395,12 +386,6 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _navigateToDiscover,
-        backgroundColor: AppColors.primaryGreen,
-        icon: const Icon(Icons.explore),
-        label: const Text('Discover'),
       ),
     );
   }

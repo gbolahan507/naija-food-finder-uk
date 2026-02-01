@@ -226,7 +226,7 @@ class RestaurantDetailsScreen extends ConsumerWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '${restaurant.distance} miles away',
+                            '${restaurant.distance.toStringAsFixed(1)} miles away',
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -598,7 +598,7 @@ ${restaurant.cuisineTypes.join(' • ')}
 ⭐ ${restaurant.rating} (${restaurant.reviewCount} reviews)
 
 📍 ${restaurant.address}, ${restaurant.city}
-🚗 ${restaurant.distance} miles away
+🚗 ${restaurant.distance.toStringAsFixed(1)} miles away
 
 ${restaurant.hasDelivery ? '✅ Delivery available' : ''}
 ${restaurant.hasTakeaway ? '✅ Takeaway available' : ''}
