@@ -12,10 +12,10 @@ final restaurantsRepositoryProvider = Provider<RestaurantsRepository>((ref) {
   return RestaurantsRepository();
 });
 
-// Restaurants stream provider
+// Restaurants stream provider (discovered restaurants only)
 final restaurantsProvider = StreamProvider<List<Restaurant>>((ref) {
   final repository = ref.watch(restaurantsRepositoryProvider);
-  return repository.getRestaurants();
+  return repository.getDiscoveredRestaurants();
 });
 
 // Search provider

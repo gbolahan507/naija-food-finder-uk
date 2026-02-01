@@ -8,9 +8,11 @@ import '../widgets/restaurant_card.dart';
 import '../widgets/restaurant_card_skeleton.dart';
 import '../widgets/filter_modal.dart';
 import 'restaurant_details_screen.dart';
+import 'discover_screen.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/empty_state.dart';
 import '../../../../core/widgets/error_state.dart';
+import '../../../../core/services/restaurant_sync_service.dart';
 
 class RestaurantsListScreen extends ConsumerStatefulWidget {
   const RestaurantsListScreen({super.key});
@@ -69,12 +71,39 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
   }
 
   Future<void> _onRefresh() async {
+    // Try to sync outdated restaurants first
+    try {
+      final syncService = ref.read(restaurantSyncServiceProvider);
+      final result = await syncService.syncOutdatedRestaurants();
+
+      if (mounted && result.hasSynced) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result.message),
+            backgroundColor: result.hasErrors ? AppColors.warning : AppColors.success,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      // Sync failed silently, just refresh data
+    }
+
     // Invalidate the providers to force a refresh
     ref.invalidate(filteredRestaurantsProvider);
     ref.invalidate(restaurantsProvider);
 
     // Small delay to show the refresh indicator
     await Future.delayed(const Duration(milliseconds: 500));
+  }
+
+  void _navigateToDiscover() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const DiscoverScreen(),
+      ),
+    );
   }
 
   @override
@@ -367,6 +396,12 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _navigateToDiscover,
+        backgroundColor: AppColors.primaryGreen,
+        icon: const Icon(Icons.explore),
+        label: const Text('Discover'),
+      ),
     );
   }
 
@@ -393,7 +428,7 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
       onRefresh: _onRefresh,
       color: AppColors.primaryGreen,
       child: ListView.builder(
-        padding: const EdgeInsets.only(top: 8),
+        padding: const EdgeInsets.only(top: 8, bottom: 80),
         itemCount: restaurants.length,
         itemBuilder: (context, index) {
           final restaurant = restaurants[index];
