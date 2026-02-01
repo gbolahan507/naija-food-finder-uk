@@ -7,6 +7,7 @@ import '../../features/auth/data/providers/auth_provider.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/restaurants/presentation/screens/restaurants_list_screen.dart';
 import '../../features/restaurants/presentation/screens/map_screen.dart';
+import '../../features/restaurants/presentation/screens/admin_seed_screen.dart';
 import '../constants/app_colors.dart';
 import '../theme/theme_toggle_widget.dart';
 
@@ -250,20 +251,47 @@ class ProfileTabScreen extends ConsumerWidget {
                   const SizedBox(height: 32),
 
                   // Settings Section
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Settings',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 12),
-                        ThemeToggleWidget(),
+                        const SizedBox(height: 12),
+                        const ThemeToggleWidget(),
+                        const SizedBox(height: 24),
+                        const Text(
+                          'Developer Tools',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const AdminSeedScreen(),
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.cloud_download),
+                            label: const Text('Seed from Google Places'),
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.all(12),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -359,20 +387,47 @@ class ProfileTabScreen extends ConsumerWidget {
                 const SizedBox(height: 32),
 
                 // Settings Section
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Settings',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 12),
-                      ThemeToggleWidget(),
+                      const SizedBox(height: 12),
+                      const ThemeToggleWidget(),
+                      const SizedBox(height: 24),
+                      const Text(
+                        'Developer Tools',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AdminSeedScreen(),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.cloud_download),
+                          label: const Text('Seed from Google Places'),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.all(12),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

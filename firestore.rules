@@ -13,6 +13,14 @@ service cloud.firestore {
       allow delete: if false; // Only admins can delete (via Firebase Console)
     }
 
+    // Discovered restaurants collection - from Google Places API
+    match /discovered_restaurants/{restaurantId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if false;
+    }
+
     // User-specific data
     match /users/{userId} {
       // Users can only access their own data
