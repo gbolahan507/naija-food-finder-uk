@@ -1,11 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:naija_food_finder_uk/features/restaurants/data/repositories/favorites_repository.dart';
+import '../../../../core/services/location_service.dart';
 import '../models/restaurant_model.dart';
 import '../models/review_model.dart';
 import '../repositories/restaurants_repository.dart';
 import '../repositories/reviews_repository.dart';
 import 'filter_provider.dart';
+
+// User location provider
+final userLocationProvider = FutureProvider<LatLng?>((ref) async {
+  return await LocationService.getCurrentLocation();
+});
 
 // Repository provider
 final restaurantsRepositoryProvider = Provider<RestaurantsRepository>((ref) {
@@ -26,11 +33,30 @@ final filteredRestaurantsProvider =
   final repository = ref.watch(restaurantsRepositoryProvider);
   final searchQuery = ref.watch(searchQueryProvider);
   final filter = ref.watch(restaurantFilterProvider);
+  final userLocationAsync = ref.watch(userLocationProvider);
+
+  // Get user location (may be null if permission denied)
+  LatLng? userLocation;
+  userLocationAsync.whenData((loc) => userLocation = loc);
 
   // Get restaurants from repository with search
   await for (final restaurants in repository.searchRestaurants(searchQuery)) {
+    // Calculate distances from user location
+    var restaurantsWithDistance = restaurants.map((r) {
+      if (userLocation != null && r.latitude != null && r.longitude != null) {
+        final distance = LocationService.calculateDistance(
+          userLocation!.latitude,
+          userLocation!.longitude,
+          r.latitude!,
+          r.longitude!,
+        );
+        return r.copyWith(distance: distance);
+      }
+      return r;
+    }).toList();
+
     // Apply advanced filters
-    var filtered = restaurants;
+    var filtered = restaurantsWithDistance;
 
     // Filter by distance
     if (filter.maxDistance < 10.0) {

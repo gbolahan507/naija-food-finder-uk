@@ -113,7 +113,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         infoWindow: InfoWindow(
           title: restaurant.name,
           snippet:
-              '${restaurant.rating} ⭐ • ${restaurant.distance}mi away${restaurant.isOpenNow ? ' • Open' : ' • Closed'}',
+              '${restaurant.rating} ⭐ • ${restaurant.distance.toStringAsFixed(1)}mi away${restaurant.isOpenNow ? ' • Open' : ' • Closed'}',
         ),
         icon: BitmapDescriptor.defaultMarkerWithHue(
           restaurant.isOpenNow
@@ -470,7 +470,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                               subtitle: Text(
-                                '${restaurant.rating} ⭐ • ${restaurant.distance}mi${restaurant.isOpenNow ? ' • Open' : ' • Closed'}',
+                                '${restaurant.rating} ⭐ • ${restaurant.distance.toStringAsFixed(1)}mi${restaurant.isOpenNow ? ' • Open' : ' • Closed'}',
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: AppColors.lightText,

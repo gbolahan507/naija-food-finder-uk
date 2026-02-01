@@ -237,7 +237,7 @@ class RestaurantCard extends ConsumerWidget {
                         ),
                       ),
                       Text(
-                        '${restaurant.distance}mi',
+                        '${restaurant.distance.toStringAsFixed(1)}mi',
                         style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
