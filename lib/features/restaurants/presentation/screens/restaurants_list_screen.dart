@@ -308,6 +308,98 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
             ),
           ),
 
+          // Active Filter Indicators (City, etc.)
+          Consumer(
+            builder: (context, ref, child) {
+              final filter = ref.watch(restaurantFilterProvider);
+              if (!filter.hasActiveFilters) return const SizedBox.shrink();
+
+              return Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                color: AppColors.extraLightGrey,
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    if (filter.selectedCity != null)
+                      _buildActiveFilterChip(
+                        Icons.location_city,
+                        filter.selectedCity!,
+                        () {
+                          ref.read(restaurantFilterProvider.notifier).state =
+                              filter.copyWith(clearSelectedCity: true);
+                        },
+                      ),
+                    if (filter.maxDistance < 10.0)
+                      _buildActiveFilterChip(
+                        Icons.near_me,
+                        '< ${filter.maxDistance.toStringAsFixed(1)} mi',
+                        () {
+                          ref.read(restaurantFilterProvider.notifier).state =
+                              filter.copyWith(maxDistance: 10.0);
+                        },
+                      ),
+                    if (filter.isOpenNow == true)
+                      _buildActiveFilterChip(
+                        Icons.schedule,
+                        'Open Now',
+                        () {
+                          ref.read(restaurantFilterProvider.notifier).state =
+                              filter.copyWith(clearOpenNow: true);
+                        },
+                      ),
+                    if (filter.hasDelivery)
+                      _buildActiveFilterChip(
+                        Icons.delivery_dining,
+                        'Delivery',
+                        () {
+                          ref.read(restaurantFilterProvider.notifier).state =
+                              filter.copyWith(hasDelivery: false);
+                        },
+                      ),
+                    if (filter.hasTakeaway)
+                      _buildActiveFilterChip(
+                        Icons.takeout_dining,
+                        'Takeaway',
+                        () {
+                          ref.read(restaurantFilterProvider.notifier).state =
+                              filter.copyWith(hasTakeaway: false);
+                        },
+                      ),
+                    if (filter.minimumRating != null)
+                      _buildActiveFilterChip(
+                        Icons.star,
+                        '${filter.minimumRating}+ stars',
+                        () {
+                          ref.read(restaurantFilterProvider.notifier).state =
+                              filter.copyWith(clearMinimumRating: true);
+                        },
+                      ),
+                    if (filter.selectedCuisines.isNotEmpty)
+                      _buildActiveFilterChip(
+                        Icons.restaurant_menu,
+                        '${filter.selectedCuisines.length} cuisines',
+                        () {
+                          ref.read(restaurantFilterProvider.notifier).state =
+                              filter.copyWith(selectedCuisines: []);
+                        },
+                      ),
+                    if (filter.selectedPriceRanges.isNotEmpty)
+                      _buildActiveFilterChip(
+                        Icons.attach_money,
+                        '${filter.selectedPriceRanges.length} price ranges',
+                        () {
+                          ref.read(restaurantFilterProvider.notifier).state =
+                              filter.copyWith(selectedPriceRanges: []);
+                        },
+                      ),
+                  ],
+                ),
+              );
+            },
+          ),
+
           // Restaurant List with loading/error states
           Expanded(
             child: restaurantsAsync.when(
@@ -457,6 +549,41 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
             fontSize: 14,
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildActiveFilterChip(IconData icon, String label, VoidCallback onRemove) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppColors.primaryGreen.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.primaryGreen),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: AppColors.primaryGreen),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 13,
+              color: AppColors.primaryGreen,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(width: 4),
+          GestureDetector(
+            onTap: onRemove,
+            child: const Icon(
+              Icons.close,
+              size: 16,
+              color: AppColors.primaryGreen,
+            ),
+          ),
+        ],
       ),
     );
   }
