@@ -49,6 +49,19 @@ class RestaurantDetailsScreen extends ConsumerWidget {
     }
   }
 
+  Future<void> _openWebsite(String? website) async {
+    if (website == null || website.isEmpty) {
+      return;
+    }
+
+    final Uri websiteUri = Uri.parse(website);
+    if (await canLaunchUrl(websiteUri)) {
+      await launchUrl(websiteUri, mode: LaunchMode.externalApplication);
+    } else {
+      debugPrint('Could not launch $websiteUri');
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final reviewsAsync = ref.watch(restaurantReviewsProvider(restaurant.id));
@@ -321,6 +334,28 @@ class RestaurantDetailsScreen extends ConsumerWidget {
                                     restaurant.longitude != null
                                 ? 'Get Directions'
                                 : 'No Location Available',
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.all(16),
+                            side: const BorderSide(
+                              color: AppColors.primaryGreen,
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: restaurant.website != null
+                              ? () => _openWebsite(restaurant.website)
+                              : null,
+                          icon: const Icon(Icons.language),
+                          label: Text(
+                            restaurant.website != null
+                                ? 'Visit Website'
+                                : 'No Website Available',
                           ),
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.all(16),
