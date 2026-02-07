@@ -294,110 +294,32 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
             height: 50,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             color: AppColors.extraLightGrey,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                _buildFilterChip('All', selectedFilter == 'All'),
-                const SizedBox(width: 8),
-                _buildFilterChip('Near Me', selectedFilter == 'Near Me'),
-                const SizedBox(width: 8),
-                _buildFilterChip('Delivery', selectedFilter == 'Delivery'),
-                const SizedBox(width: 8),
-                _buildFilterChip('Open Now', selectedFilter == 'Open Now'),
-              ],
-            ),
-          ),
+            child: Consumer(
+              builder: (context, ref, child) {
+                final filter = ref.watch(restaurantFilterProvider);
+                final selectedCity = filter.selectedCity;
 
-          // Active Filter Indicators (City, etc.)
-          Consumer(
-            builder: (context, ref, child) {
-              final filter = ref.watch(restaurantFilterProvider);
-              if (!filter.hasActiveFilters) return const SizedBox.shrink();
-
-              return Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                color: AppColors.extraLightGrey,
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                return ListView(
+                  scrollDirection: Axis.horizontal,
                   children: [
-                    if (filter.selectedCity != null)
-                      _buildActiveFilterChip(
-                        Icons.location_city,
-                        filter.selectedCity!,
-                        () {
-                          ref.read(restaurantFilterProvider.notifier).state =
-                              filter.copyWith(clearSelectedCity: true);
-                        },
-                      ),
-                    if (filter.maxDistance < 10.0)
-                      _buildActiveFilterChip(
-                        Icons.near_me,
-                        '< ${filter.maxDistance.toStringAsFixed(1)} mi',
-                        () {
-                          ref.read(restaurantFilterProvider.notifier).state =
-                              filter.copyWith(maxDistance: 10.0);
-                        },
-                      ),
-                    if (filter.isOpenNow == true)
-                      _buildActiveFilterChip(
-                        Icons.schedule,
-                        'Open Now',
-                        () {
-                          ref.read(restaurantFilterProvider.notifier).state =
-                              filter.copyWith(clearOpenNow: true);
-                        },
-                      ),
-                    if (filter.hasDelivery)
-                      _buildActiveFilterChip(
-                        Icons.delivery_dining,
-                        'Delivery',
-                        () {
-                          ref.read(restaurantFilterProvider.notifier).state =
-                              filter.copyWith(hasDelivery: false);
-                        },
-                      ),
-                    if (filter.hasTakeaway)
-                      _buildActiveFilterChip(
-                        Icons.takeout_dining,
-                        'Takeaway',
-                        () {
-                          ref.read(restaurantFilterProvider.notifier).state =
-                              filter.copyWith(hasTakeaway: false);
-                        },
-                      ),
-                    if (filter.minimumRating != null)
-                      _buildActiveFilterChip(
-                        Icons.star,
-                        '${filter.minimumRating}+ stars',
-                        () {
-                          ref.read(restaurantFilterProvider.notifier).state =
-                              filter.copyWith(clearMinimumRating: true);
-                        },
-                      ),
-                    if (filter.selectedCuisines.isNotEmpty)
-                      _buildActiveFilterChip(
-                        Icons.restaurant_menu,
-                        '${filter.selectedCuisines.length} cuisines',
-                        () {
-                          ref.read(restaurantFilterProvider.notifier).state =
-                              filter.copyWith(selectedCuisines: []);
-                        },
-                      ),
-                    if (filter.selectedPriceRanges.isNotEmpty)
-                      _buildActiveFilterChip(
-                        Icons.attach_money,
-                        '${filter.selectedPriceRanges.length} price ranges',
-                        () {
-                          ref.read(restaurantFilterProvider.notifier).state =
-                              filter.copyWith(selectedPriceRanges: []);
-                        },
-                      ),
+                    // Show city name or "All" as first chip
+                    if (selectedCity != null)
+                      _buildCityChip(selectedCity, () {
+                        ref.read(restaurantFilterProvider.notifier).state =
+                            filter.copyWith(clearSelectedCity: true);
+                      })
+                    else
+                      _buildFilterChip('All', selectedFilter == 'All'),
+                    const SizedBox(width: 8),
+                    _buildFilterChip('Near Me', selectedFilter == 'Near Me'),
+                    const SizedBox(width: 8),
+                    _buildFilterChip('Delivery', selectedFilter == 'Delivery'),
+                    const SizedBox(width: 8),
+                    _buildFilterChip('Open Now', selectedFilter == 'Open Now'),
                   ],
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
 
           // Restaurant List with loading/error states
@@ -553,35 +475,30 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
     );
   }
 
-  Widget _buildActiveFilterChip(IconData icon, String label, VoidCallback onRemove) {
+  Widget _buildCityChip(String city, VoidCallback onClear) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.primaryGreen.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.primaryGreen),
+        color: AppColors.primaryGreen,
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: AppColors.primaryGreen),
-          const SizedBox(width: 4),
+          const Icon(Icons.location_city, size: 16, color: Colors.white),
+          const SizedBox(width: 6),
           Text(
-            label,
+            city,
             style: const TextStyle(
-              fontSize: 13,
-              color: AppColors.primaryGreen,
-              fontWeight: FontWeight.w500,
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
             ),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 6),
           GestureDetector(
-            onTap: onRemove,
-            child: const Icon(
-              Icons.close,
-              size: 16,
-              color: AppColors.primaryGreen,
-            ),
+            onTap: onClear,
+            child: const Icon(Icons.close, size: 16, color: Colors.white),
           ),
         ],
       ),
