@@ -104,6 +104,13 @@ final filteredRestaurantsProvider =
       filtered = filtered.where((r) => r.rating >= filter.minimumRating!).toList();
     }
 
+    // Filter by city
+    if (filter.selectedCity != null) {
+      filtered = filtered.where((r) =>
+        r.city.toLowerCase().contains(filter.selectedCity!.toLowerCase())
+      ).toList();
+    }
+
     yield filtered;
   }
 });

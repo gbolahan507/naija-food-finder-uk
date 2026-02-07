@@ -24,7 +24,6 @@ class RestaurantsListScreen extends ConsumerStatefulWidget {
 class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
   String selectedFilter = 'All';
   String selectedSort = 'Distance';
-  String selectedCity = 'All Cities';
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -36,14 +35,6 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
   List<Restaurant> applyFilters(List<Restaurant> restaurants) {
     var filtered = restaurants;
 
-    // Filter by city first
-    if (selectedCity != 'All Cities') {
-      filtered = filtered.where((r) =>
-        r.city.toLowerCase().contains(selectedCity.toLowerCase())
-      ).toList();
-    }
-
-    // Then apply other filters
     if (selectedFilter == 'Near Me') {
       filtered = filtered.where((r) => r.distance <= 5.0).toList();
     } else if (selectedFilter == 'Delivery') {
@@ -53,16 +44,6 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
     }
 
     return filtered;
-  }
-
-  List<String> getUniqueCities(List<Restaurant> restaurants) {
-    final cities = restaurants
-        .map((r) => r.city)
-        .where((city) => city.isNotEmpty)
-        .toSet()
-        .toList();
-    cities.sort();
-    return ['All Cities', ...cities];
   }
 
   List<Restaurant> applySort(List<Restaurant> restaurants) {
@@ -324,70 +305,6 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
                 const SizedBox(width: 8),
                 _buildFilterChip('Open Now', selectedFilter == 'Open Now'),
               ],
-            ),
-          ),
-
-          // City Dropdown
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            color: AppColors.extraLightGrey,
-            child: Consumer(
-              builder: (context, ref, child) {
-                final restaurantsAsync = ref.watch(restaurantsProvider);
-                return restaurantsAsync.when(
-                  data: (restaurants) {
-                    final cities = getUniqueCities(restaurants);
-                    return Row(
-                      children: [
-                        const Icon(
-                          Icons.location_city,
-                          color: AppColors.primaryGreen,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: AppColors.lightGrey),
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: cities.contains(selectedCity) ? selectedCity : 'All Cities',
-                                isExpanded: true,
-                                icon: const Icon(Icons.keyboard_arrow_down),
-                                items: cities.map((city) {
-                                  final count = city == 'All Cities'
-                                      ? restaurants.length
-                                      : restaurants.where((r) =>
-                                          r.city.toLowerCase().contains(city.toLowerCase())
-                                        ).length;
-                                  return DropdownMenuItem(
-                                    value: city,
-                                    child: Text(
-                                      '$city ($count)',
-                                      style: const TextStyle(fontSize: 14),
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedCity = value ?? 'All Cities';
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                  loading: () => const SizedBox.shrink(),
-                  error: (_, __) => const SizedBox.shrink(),
-                );
-              },
             ),
           ),
 
