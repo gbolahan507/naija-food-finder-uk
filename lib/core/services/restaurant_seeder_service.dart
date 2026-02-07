@@ -94,6 +94,12 @@ class RestaurantSeederService {
             // Get full details
             final details = await _placesService.getPlaceDetails(place.placeId);
 
+            // Get photo URLs
+            List<String>? photos;
+            if (details?.photoReferences != null && details!.photoReferences!.isNotEmpty) {
+              photos = _placesService.getPhotoUrls(details.photoReferences!);
+            }
+
             // Create restaurant object
             final restaurant = Restaurant(
               id: '', // Firestore will generate
@@ -118,6 +124,7 @@ class RestaurantSeederService {
               lastSyncedAt: DateTime.now(),
               source: RestaurantSource.placesApi,
               website: details?.website,
+              photos: photos,
             );
 
             // Add to Firestore

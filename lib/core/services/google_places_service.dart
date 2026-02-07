@@ -82,6 +82,7 @@ class PlaceDetails {
   final List<OpeningHoursPeriod>? openingHours;
   final bool? isOpenNow;
   final String? photoReference;
+  final List<String>? photoReferences; // All photo references
   final int? priceLevel;
 
   PlaceDetails({
@@ -98,6 +99,7 @@ class PlaceDetails {
     this.openingHours,
     this.isOpenNow,
     this.photoReference,
+    this.photoReferences,
     this.priceLevel,
   });
 
@@ -110,10 +112,16 @@ class PlaceDetails {
       lng = (json['geometry']['location']['lng'] as num?)?.toDouble();
     }
 
-    // Extract photo reference
+    // Extract all photo references
     String? photoRef;
+    List<String>? photoRefs;
     if (json['photos'] != null && (json['photos'] as List).isNotEmpty) {
-      photoRef = json['photos'][0]['photo_reference'] as String?;
+      final photos = json['photos'] as List;
+      photoRef = photos[0]['photo_reference'] as String?;
+      photoRefs = photos
+          .take(10) // Limit to 10 photos to control costs
+          .map((p) => p['photo_reference'] as String)
+          .toList();
     }
 
     // Extract opening hours
@@ -142,6 +150,7 @@ class PlaceDetails {
       openingHours: periods,
       isOpenNow: isOpenNow,
       photoReference: photoRef,
+      photoReferences: photoRefs,
       priceLevel: json['price_level'] as int?,
     );
   }
@@ -386,6 +395,13 @@ class GooglePlacesService {
         '?maxwidth=$maxWidth'
         '&photo_reference=$photoReference'
         '&key=${ApiConfig.googlePlacesApiKey}';
+  }
+
+  /// Get all photo URLs from a list of photo references
+  List<String> getPhotoUrls(List<String> photoReferences, {int maxWidth = 800}) {
+    return photoReferences
+        .map((ref) => getPhotoUrl(ref, maxWidth: maxWidth))
+        .toList();
   }
 
   /// Clear the search cache
