@@ -18,7 +18,7 @@ service cloud.firestore {
       allow read: if true;
       allow create: if true;
       allow update: if true;
-      allow delete: if false;
+      allow delete: if true; // Allow deletion for reseeding
     }
 
     // User-specific data
