@@ -44,12 +44,8 @@ service cloud.firestore {
     match /reviews/{reviewId} {
       allow read: if true; // Anyone can read reviews
       allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
-      // Allow update if own review OR only changing restaurantId (for migration)
-      allow update: if request.auth != null && (
-        request.auth.uid == resource.data.userId ||
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['restaurantId'])
-      );
-      allow delete: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow update: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow delete: if request.auth != null; // Allow deletion for reseeding
     }
   }
 }

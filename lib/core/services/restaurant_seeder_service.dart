@@ -155,157 +155,77 @@ class RestaurantSeederService {
     );
   }
 
-  /// Full reset: delete all and seed fresh, preserving reviews
+  /// Full reset: delete all and seed fresh
   Future<SeederResult> resetAndSeed({
     List<String>? cities,
     void Function(String status)? onProgress,
   }) async {
-    // Step 1: Build mapping of old restaurantId -> placeId (to preserve reviews)
-    onProgress?.call('Mapping existing restaurants...');
-    final oldIdToPlaceId = await _getRestaurantIdToPlaceIdMap();
-    onProgress?.call('Found ${oldIdToPlaceId.length} restaurants with placeIds');
+    // Step 1: Delete all reviews (start fresh)
+    onProgress?.call('Clearing old reviews...');
+    final reviewsDeleted = await _deleteAllReviews();
+    onProgress?.call('Deleted $reviewsDeleted reviews');
 
-    // Step 2: Delete existing restaurants
+    // Step 2: Clear all favorites
+    onProgress?.call('Clearing old favorites...');
+    final favoritesDeleted = await _deleteAllFavorites();
+    onProgress?.call('Deleted $favoritesDeleted favorites');
+
+    // Step 3: Delete existing restaurants
     onProgress?.call('Deleting existing restaurants...');
     final deleted = await deleteAllRestaurants();
     onProgress?.call('Deleted $deleted restaurants');
 
-    // Step 3: Seed new restaurants
+    // Step 4: Seed new restaurants
     final result = await seedFromPlacesAPI(
       cities: cities,
       onProgress: onProgress,
     );
 
-    // Step 4: Build mapping of placeId -> new restaurantId
-    onProgress?.call('Updating review references...');
-    final placeIdToNewId = await _getPlaceIdToRestaurantIdMap();
-
-    // Step 5: Update reviews to point to new restaurant IDs
-    int reviewsUpdated = await _updateReviewReferences(oldIdToPlaceId, placeIdToNewId);
-    onProgress?.call('Updated $reviewsUpdated reviews');
-
-    // Step 6: Update favorites to point to new restaurant IDs
-    onProgress?.call('Updating favorites...');
-    int favoritesUpdated = await _updateFavoritesReferences(oldIdToPlaceId, placeIdToNewId);
-    onProgress?.call('Updated $favoritesUpdated favorites');
-
     return SeederResult(
       added: result.added,
       skipped: result.skipped,
       failed: result.failed,
-      message: '${result.message}, $reviewsUpdated reviews & $favoritesUpdated favorites preserved',
+      message: '${result.message}. Fresh start!',
     );
   }
 
-  /// Get mapping of restaurantId -> placeId for existing restaurants
-  Future<Map<String, String>> _getRestaurantIdToPlaceIdMap() async {
-    final map = <String, String>{};
-    final snapshot = await _firestore.collection(collectionName).get();
-
-    for (final doc in snapshot.docs) {
-      final placeId = doc.data()['placeId'] as String?;
-      if (placeId != null && placeId.isNotEmpty) {
-        map[doc.id] = placeId;
-      }
-    }
-
-    return map;
-  }
-
-  /// Get mapping of placeId -> restaurantId for new restaurants
-  Future<Map<String, String>> _getPlaceIdToRestaurantIdMap() async {
-    final map = <String, String>{};
-    final snapshot = await _firestore.collection(collectionName).get();
-
-    for (final doc in snapshot.docs) {
-      final placeId = doc.data()['placeId'] as String?;
-      if (placeId != null && placeId.isNotEmpty) {
-        map[placeId] = doc.id;
-      }
-    }
-
-    return map;
-  }
-
-  /// Update reviews to point to new restaurant IDs
-  Future<int> _updateReviewReferences(
-    Map<String, String> oldIdToPlaceId,
-    Map<String, String> placeIdToNewId,
-  ) async {
-    int updated = 0;
-
-    // Get all reviews
-    final reviewsSnapshot = await _firestore.collection('reviews').get();
+  /// Delete all reviews
+  Future<int> _deleteAllReviews() async {
+    final snapshot = await _firestore.collection('reviews').get();
+    int deleted = 0;
 
     final batch = _firestore.batch();
-    int batchCount = 0;
-
-    for (final reviewDoc in reviewsSnapshot.docs) {
-      final oldRestaurantId = reviewDoc.data()['restaurantId'] as String?;
-      if (oldRestaurantId == null) continue;
-
-      // Find the placeId for the old restaurant
-      final placeId = oldIdToPlaceId[oldRestaurantId];
-      if (placeId == null) continue;
-
-      // Find the new restaurantId for this placeId
-      final newRestaurantId = placeIdToNewId[placeId];
-      if (newRestaurantId == null) continue;
-
-      // Update the review
-      batch.update(reviewDoc.reference, {'restaurantId': newRestaurantId});
-      updated++;
-      batchCount++;
-
-      // Firestore batches have a limit of 500 operations
-      if (batchCount >= 450) {
-        await batch.commit();
-        batchCount = 0;
-      }
+    for (final doc in snapshot.docs) {
+      batch.delete(doc.reference);
+      deleted++;
     }
 
-    // Commit remaining updates
-    if (batchCount > 0) {
+    if (deleted > 0) {
       await batch.commit();
     }
 
-    return updated;
+    return deleted;
   }
 
-  /// Update favorites to point to new restaurant IDs
-  Future<int> _updateFavoritesReferences(
-    Map<String, String> oldIdToPlaceId,
-    Map<String, String> placeIdToNewId,
-  ) async {
-    int updated = 0;
-
-    // Get all users
+  /// Delete all favorites from all users
+  Future<int> _deleteAllFavorites() async {
+    int deleted = 0;
     final usersSnapshot = await _firestore.collection('users').get();
 
     for (final userDoc in usersSnapshot.docs) {
       final favoritesSnapshot = await userDoc.reference.collection('favorites').get();
 
-      for (final favDoc in favoritesSnapshot.docs) {
-        final oldRestaurantId = favDoc.id;
-
-        // Find the placeId for the old restaurant
-        final placeId = oldIdToPlaceId[oldRestaurantId];
-        if (placeId == null) continue;
-
-        // Find the new restaurantId for this placeId
-        final newRestaurantId = placeIdToNewId[placeId];
-        if (newRestaurantId == null) continue;
-
-        // Create new favorite doc with new ID and delete old one
-        await userDoc.reference.collection('favorites').doc(newRestaurantId).set({
-          'addedAt': favDoc.data()['addedAt'] ?? FieldValue.serverTimestamp(),
-        });
-        await favDoc.reference.delete();
-        updated++;
+      if (favoritesSnapshot.docs.isNotEmpty) {
+        final batch = _firestore.batch();
+        for (final favDoc in favoritesSnapshot.docs) {
+          batch.delete(favDoc.reference);
+          deleted++;
+        }
+        await batch.commit();
       }
     }
 
-    return updated;
+    return deleted;
   }
 
   String _extractCity(String address, String fallbackCity) {
