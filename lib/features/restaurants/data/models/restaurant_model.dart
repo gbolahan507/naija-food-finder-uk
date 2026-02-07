@@ -73,6 +73,7 @@ class Restaurant {
   final DateTime? lastSyncedAt;
   final RestaurantSource? source;
   final String? website;
+  final List<String>? photos; // Multiple photo URLs
 
   const Restaurant({
     required this.id,
@@ -96,6 +97,7 @@ class Restaurant {
     this.lastSyncedAt,
     this.source,
     this.website,
+    this.photos,
   });
 
   // Factory method to create from Firestore document
@@ -145,6 +147,9 @@ class Restaurant {
       lastSyncedAt: lastSyncedAt,
       source: RestaurantSource.fromString(data['source'] as String?),
       website: data['website'] as String?,
+      photos: data['photos'] != null
+          ? List<String>.from(data['photos'] as List)
+          : null,
     );
   }
 
@@ -171,6 +176,7 @@ class Restaurant {
       'lastSyncedAt': lastSyncedAt?.toIso8601String(),
       'source': source?.value,
       'website': website,
+      'photos': photos,
     };
   }
 
@@ -197,6 +203,7 @@ class Restaurant {
     DateTime? lastSyncedAt,
     RestaurantSource? source,
     String? website,
+    List<String>? photos,
   }) {
     return Restaurant(
       id: id ?? this.id,
@@ -220,6 +227,7 @@ class Restaurant {
       lastSyncedAt: lastSyncedAt ?? this.lastSyncedAt,
       source: source ?? this.source,
       website: website ?? this.website,
+      photos: photos ?? this.photos,
     );
   }
 }

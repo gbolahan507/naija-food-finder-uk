@@ -9,6 +9,7 @@ import '../../data/providers/restaurants_provider.dart';
 import '../widgets/review_card.dart';
 import '../widgets/review_card_skeleton.dart';
 import '../widgets/opening_hours_widget.dart';
+import '../widgets/photo_gallery.dart';
 import 'write_review_screen.dart';
 
 class RestaurantDetailsScreen extends ConsumerWidget {
@@ -206,6 +207,16 @@ class RestaurantDetailsScreen extends ConsumerWidget {
                     }).toList(),
                   ),
                 ),
+
+                // Photo Gallery
+                if (restaurant.photos != null && restaurant.photos!.isNotEmpty)
+                  ...[
+                    const SizedBox(height: 24),
+                    PhotoGallery(
+                      photos: restaurant.photos!,
+                      heroTag: 'restaurant-photo-${restaurant.id}',
+                    ),
+                  ],
 
                 const SizedBox(height: 24),
 
