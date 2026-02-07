@@ -7,7 +7,7 @@ import '../../features/auth/data/providers/auth_provider.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/restaurants/presentation/screens/restaurants_list_screen.dart';
 import '../../features/restaurants/presentation/screens/map_screen.dart';
-import '../../features/restaurants/presentation/screens/admin_seed_screen.dart';
+import '../../core/services/restaurant_seeder_service.dart';
 import '../constants/app_colors.dart';
 import '../theme/theme_toggle_widget.dart';
 
@@ -154,6 +154,69 @@ class MapTabScreen extends StatelessWidget {
 class ProfileTabScreen extends ConsumerWidget {
   const ProfileTabScreen({super.key});
 
+  Future<void> _showReseedDialog(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Reseed Restaurants?'),
+        content: const Text(
+          'This will delete all existing discovered restaurants and fetch fresh data with photos from Google Places API.\n\nThis may take a few minutes.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text(
+              'Reseed',
+              style: TextStyle(color: AppColors.primaryGreen),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !context.mounted) return;
+
+    // Show progress dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const _ReseedProgressDialog(),
+    );
+
+    try {
+      final seeder = ref.read(restaurantSeederServiceProvider);
+      await seeder.resetAndSeed(
+        onProgress: (status) {
+          debugPrint(status);
+        },
+      );
+
+      if (context.mounted) {
+        Navigator.pop(context); // Close progress dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Restaurants reseeded successfully!'),
+            backgroundColor: AppColors.success,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.pop(context); // Close progress dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateProvider);
@@ -277,16 +340,9 @@ class ProfileTabScreen extends ConsumerWidget {
                         SizedBox(
                           width: double.infinity,
                           child: OutlinedButton.icon(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const AdminSeedScreen(),
-                                ),
-                              );
-                            },
-                            icon: const Icon(Icons.cloud_download),
-                            label: const Text('Seed from Google Places'),
+                            onPressed: () => _showReseedDialog(context, ref),
+                            icon: const Icon(Icons.refresh),
+                            label: const Text('Reseed Restaurants (with Photos)'),
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.all(12),
                             ),
@@ -413,16 +469,9 @@ class ProfileTabScreen extends ConsumerWidget {
                       SizedBox(
                         width: double.infinity,
                         child: OutlinedButton.icon(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const AdminSeedScreen(),
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.cloud_download),
-                          label: const Text('Seed from Google Places'),
+                          onPressed: () => _showReseedDialog(context, ref),
+                          icon: const Icon(Icons.refresh),
+                          label: const Text('Reseed Restaurants (with Photos)'),
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.all(12),
                           ),
@@ -453,6 +502,39 @@ class ProfileTabScreen extends ConsumerWidget {
         body: Center(
           child: Text('Error: $error'),
         ),
+      ),
+    );
+  }
+}
+
+class _ReseedProgressDialog extends StatelessWidget {
+  const _ReseedProgressDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const CircularProgressIndicator(color: AppColors.primaryGreen),
+          const SizedBox(height: 24),
+          const Text(
+            'Reseeding Restaurants...',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Fetching from Google Places API\nThis may take a few minutes',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[600],
+            ),
+          ),
+        ],
       ),
     );
   }
