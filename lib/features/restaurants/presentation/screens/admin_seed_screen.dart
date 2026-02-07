@@ -15,7 +15,7 @@ class _AdminSeedScreenState extends ConsumerState<AdminSeedScreen> {
   final List<String> _logs = [];
   SeederResult? _result;
 
-  Future<void> _startSeeding() async {
+  Future<void> _startSeeding({bool resetFirst = false}) async {
     setState(() {
       _isSeeding = true;
       _logs.clear();
@@ -25,16 +25,31 @@ class _AdminSeedScreenState extends ConsumerState<AdminSeedScreen> {
     final seeder = ref.read(restaurantSeederServiceProvider);
 
     try {
-      // Only seed, don't delete (user will delete manually from Firebase Console)
-      final result = await seeder.seedFromPlacesAPI(
-        onProgress: (status) {
-          if (mounted) {
-            setState(() {
-              _logs.add(status);
-            });
-          }
-        },
-      );
+      SeederResult result;
+
+      if (resetFirst) {
+        // Delete all and reseed
+        result = await seeder.resetAndSeed(
+          onProgress: (status) {
+            if (mounted) {
+              setState(() {
+                _logs.add(status);
+              });
+            }
+          },
+        );
+      } else {
+        // Only seed, don't delete
+        result = await seeder.seedFromPlacesAPI(
+          onProgress: (status) {
+            if (mounted) {
+              setState(() {
+                _logs.add(status);
+              });
+            }
+          },
+        );
+      }
 
       if (mounted) {
         setState(() {
@@ -128,7 +143,7 @@ class _AdminSeedScreenState extends ConsumerState<AdminSeedScreen> {
 
             // Start button
             ElevatedButton.icon(
-              onPressed: _isSeeding ? null : _startSeeding,
+              onPressed: _isSeeding ? null : () => _startSeeding(),
               icon: _isSeeding
                   ? const SizedBox(
                       width: 20,
@@ -138,11 +153,56 @@ class _AdminSeedScreenState extends ConsumerState<AdminSeedScreen> {
                         color: Colors.white,
                       ),
                     )
-                  : const Icon(Icons.play_arrow),
-              label: Text(_isSeeding ? 'Seeding in progress...' : 'Start Seeding'),
+                  : const Icon(Icons.add),
+              label: Text(_isSeeding ? 'Seeding in progress...' : 'Add New Restaurants'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryGreen,
                 padding: const EdgeInsets.all(16),
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            // Reset & Reseed button
+            OutlinedButton.icon(
+              onPressed: _isSeeding
+                  ? null
+                  : () async {
+                      final confirmed = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Reset & Reseed?'),
+                          content: const Text(
+                            'This will DELETE all existing discovered restaurants and fetch fresh data with photos from Google Places API.\n\nThis action cannot be undone.',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              child: const Text(
+                                'Reset & Reseed',
+                                style: TextStyle(color: AppColors.error),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+
+                      if (confirmed == true) {
+                        _startSeeding(resetFirst: true);
+                      }
+                    },
+              icon: const Icon(Icons.refresh, color: AppColors.warning),
+              label: const Text(
+                'Reset & Reseed (with Photos)',
+                style: TextStyle(color: AppColors.warning),
+              ),
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.all(16),
+                side: const BorderSide(color: AppColors.warning, width: 2),
               ),
             ),
 
