@@ -104,11 +104,12 @@ final filteredRestaurantsProvider =
       filtered = filtered.where((r) => r.rating >= filter.minimumRating!).toList();
     }
 
-    // Filter by city
+    // Filter by city (using extracted city name)
     if (filter.selectedCity != null) {
-      filtered = filtered.where((r) =>
-        r.city.toLowerCase().contains(filter.selectedCity!.toLowerCase())
-      ).toList();
+      filtered = filtered.where((r) {
+        final cityName = extractCityName(r.city);
+        return cityName.toLowerCase() == filter.selectedCity!.toLowerCase();
+      }).toList();
     }
 
     yield filtered;

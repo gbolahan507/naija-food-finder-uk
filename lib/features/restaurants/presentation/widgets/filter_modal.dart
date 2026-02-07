@@ -414,7 +414,9 @@ class _FilterModalState extends ConsumerState<FilterModal> {
   Widget _buildCityDropdown(AsyncValue<List<dynamic>> restaurantsAsync) {
     return restaurantsAsync.when(
       data: (restaurants) {
-        final cities = extractUniqueCities(restaurants.cast());
+        final cityCounts = extractCitiesWithCounts(restaurants.cast());
+        final cities = cityCounts.keys.toList()..sort();
+
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
@@ -444,9 +446,7 @@ class _FilterModalState extends ConsumerState<FilterModal> {
                   ),
                 ),
                 ...cities.map((city) {
-                  final count = restaurants.where((r) =>
-                    r.city.toLowerCase().contains(city.toLowerCase())
-                  ).length;
+                  final count = cityCounts[city] ?? 0;
                   return DropdownMenuItem<String?>(
                     value: city,
                     child: Row(
