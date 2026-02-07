@@ -22,6 +22,7 @@ class RestaurantFilter extends Equatable {
   final bool hasTakeaway;
   final List<PriceRange> selectedPriceRanges;
   final double? minimumRating; // null = no minimum, 0.0-5.0
+  final String? selectedCity; // null = all cities
 
   const RestaurantFilter({
     this.maxDistance = 10.0,
@@ -31,6 +32,7 @@ class RestaurantFilter extends Equatable {
     this.hasTakeaway = false,
     this.selectedPriceRanges = const [],
     this.minimumRating,
+    this.selectedCity,
   });
 
   /// Create an empty filter (no filters applied)
@@ -41,7 +43,8 @@ class RestaurantFilter extends Equatable {
         hasDelivery = false,
         hasTakeaway = false,
         selectedPriceRanges = const [],
-        minimumRating = null;
+        minimumRating = null,
+        selectedCity = null;
 
   /// Check if any filters are active
   bool get hasActiveFilters {
@@ -51,7 +54,8 @@ class RestaurantFilter extends Equatable {
         hasDelivery ||
         hasTakeaway ||
         selectedPriceRanges.isNotEmpty ||
-        minimumRating != null;
+        minimumRating != null ||
+        selectedCity != null;
   }
 
   /// Count the number of active filters
@@ -64,6 +68,7 @@ class RestaurantFilter extends Equatable {
     if (hasTakeaway) count++;
     if (selectedPriceRanges.isNotEmpty) count++;
     if (minimumRating != null) count++;
+    if (selectedCity != null) count++;
     return count;
   }
 
@@ -76,8 +81,10 @@ class RestaurantFilter extends Equatable {
     bool? hasTakeaway,
     List<PriceRange>? selectedPriceRanges,
     double? minimumRating,
+    String? selectedCity,
     bool clearOpenNow = false,
     bool clearMinimumRating = false,
+    bool clearSelectedCity = false,
   }) {
     return RestaurantFilter(
       maxDistance: maxDistance ?? this.maxDistance,
@@ -87,6 +94,7 @@ class RestaurantFilter extends Equatable {
       hasTakeaway: hasTakeaway ?? this.hasTakeaway,
       selectedPriceRanges: selectedPriceRanges ?? this.selectedPriceRanges,
       minimumRating: clearMinimumRating ? null : (minimumRating ?? this.minimumRating),
+      selectedCity: clearSelectedCity ? null : (selectedCity ?? this.selectedCity),
     );
   }
 
@@ -99,5 +107,6 @@ class RestaurantFilter extends Equatable {
         hasTakeaway,
         selectedPriceRanges,
         minimumRating,
+        selectedCity,
       ];
 }

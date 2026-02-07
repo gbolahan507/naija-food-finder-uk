@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import '../models/restaurant_filter.dart';
+import '../models/restaurant_model.dart';
 
 /// Provider for restaurant filters
 final restaurantFilterProvider =
@@ -20,3 +21,17 @@ final availableCuisinesProvider = Provider<List<String>>((ref) {
     'Fusion',
   ];
 });
+
+/// Available cities provider - populated from restaurants
+final availableCitiesProvider = StateProvider<List<String>>((ref) => []);
+
+/// Helper to extract unique cities from restaurants
+List<String> extractUniqueCities(List<Restaurant> restaurants) {
+  final cities = restaurants
+      .map((r) => r.city)
+      .where((city) => city.isNotEmpty)
+      .toSet()
+      .toList();
+  cities.sort();
+  return cities;
+}

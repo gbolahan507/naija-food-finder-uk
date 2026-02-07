@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../data/models/restaurant_filter.dart';
 import '../../data/providers/filter_provider.dart';
+import '../../data/providers/restaurants_provider.dart';
 
 class FilterModal extends ConsumerStatefulWidget {
   const FilterModal({super.key});
@@ -84,6 +85,15 @@ class _FilterModalState extends ConsumerState<FilterModal> {
     });
   }
 
+  void _updateCity(String? city) {
+    setState(() {
+      _tempFilter = _tempFilter.copyWith(
+        selectedCity: city,
+        clearSelectedCity: city == null,
+      );
+    });
+  }
+
   void _clearFilters() {
     setState(() {
       _tempFilter = const RestaurantFilter.empty();
@@ -98,6 +108,7 @@ class _FilterModalState extends ConsumerState<FilterModal> {
   @override
   Widget build(BuildContext context) {
     final availableCuisines = ref.watch(availableCuisinesProvider);
+    final restaurantsAsync = ref.watch(restaurantsProvider);
 
     return Container(
       decoration: BoxDecoration(
@@ -145,6 +156,12 @@ class _FilterModalState extends ConsumerState<FilterModal> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // City Selection
+                  _buildSectionTitle('City'),
+                  const SizedBox(height: 8),
+                  _buildCityDropdown(restaurantsAsync),
+                  const SizedBox(height: 24),
+
                   // Distance Slider
                   _buildSectionTitle('Distance'),
                   const SizedBox(height: 8),
@@ -391,6 +408,95 @@ class _FilterModalState extends ConsumerState<FilterModal> {
           }).toList(),
         ),
       ],
+    );
+  }
+
+  Widget _buildCityDropdown(AsyncValue<List<dynamic>> restaurantsAsync) {
+    return restaurantsAsync.when(
+      data: (restaurants) {
+        final cities = extractUniqueCities(restaurants.cast());
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: _tempFilter.selectedCity != null
+                  ? AppColors.primaryGreen
+                  : Colors.grey[300]!,
+            ),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String?>(
+              value: _tempFilter.selectedCity,
+              isExpanded: true,
+              hint: const Text('All Cities'),
+              icon: const Icon(Icons.keyboard_arrow_down),
+              items: [
+                DropdownMenuItem<String?>(
+                  value: null,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.public, size: 18, color: AppColors.primaryGreen),
+                      const SizedBox(width: 8),
+                      Text('All Cities (${restaurants.length})'),
+                    ],
+                  ),
+                ),
+                ...cities.map((city) {
+                  final count = restaurants.where((r) =>
+                    r.city.toLowerCase().contains(city.toLowerCase())
+                  ).length;
+                  return DropdownMenuItem<String?>(
+                    value: city,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.location_city, size: 18, color: AppColors.primaryGreen),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            '$city ($count)',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ],
+              onChanged: (value) => _updateCity(value),
+            ),
+          ),
+        );
+      },
+      loading: () => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey[300]!),
+        ),
+        child: const Row(
+          children: [
+            SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+            SizedBox(width: 12),
+            Text('Loading cities...'),
+          ],
+        ),
+      ),
+      error: (_, __) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey[300]!),
+        ),
+        child: const Text('Could not load cities'),
+      ),
     );
   }
 }
